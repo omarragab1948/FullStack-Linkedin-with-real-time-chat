@@ -2,26 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+/* Add these styles to your CSS or SCSS file */
+a::after {
+  content: "";
+  display: block;
+  width: 0; /* Initially, set width to 0 */
+  height: 2px;
+  background-color: black;
+  position: absolute;
+  bottom: 0;
+  left: 50%; /* Center the animation */
+  transform: translateX(-50%); /* Center the animation */
+  transition: width 0.3s ease; /* Add a transition for smooth movement */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.active::after {
+  width: 100%; /* Set width to 100% for the active link */
 }

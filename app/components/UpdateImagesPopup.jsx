@@ -1,0 +1,195 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import { IoCloseSharp } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { addPost, updateUserImages } from "../services/apiHandler";
+import { login } from "../rtk/authSlice";
+
+const UpdateImagePopup = ({
+  updateImage,
+  setUpdateImage,
+
+  typeImage,
+}) => {
+  const handleDocumentClick = (e) => {
+    // Check if the clicked element is not part of the menu
+    if (updateImage && e.target.closest(".menu-container") === null) {
+      setUpdateImage(false); // Fix this line to use setShow instead of setShowMenu
+      setSrcImage(false); //
+      setImageShow(false); // Fix this line to use setImageShow instead of set
+      setImgUrl(false); // Fix this line to use set
+    }
+  };
+
+  useEffect(() => {
+    // Attach the event listener when the component mounts
+    document.addEventListener("click", handleDocumentClick);
+
+    // Detach the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [updateImage]);
+
+  // ... (rest of your component code)
+
+  const [spinner, setSpinner] = useState(false);
+  const dispatch = useDispatch();
+  const [srcImage, setSrcImage] = useState(null);
+  const [imageShow, setImageShow] = useState(false);
+  const [imgUrl, setImgUrl] = useState("");
+  const user = useSelector((state) => state.auth.user);
+  function handleImage(e) {
+    const file = e.target.files[0];
+    setSrcImage(file);
+
+    const reader = new FileReader();
+    reader.addEventListener("load", function (event) {
+      const imageUrl = event.target.result;
+      setImgUrl(imageUrl);
+    });
+    reader.readAsDataURL(file);
+  }
+
+  const reset = () => {
+    setSrcImage(null);
+    setImageShow(false);
+    setImgUrl("");
+  };
+  console.log(typeImage);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSpinner(true);
+    const formData = new FormData();
+    console.log(typeImage);
+    if (srcImage) {
+      if (typeImage === "Background photo") {
+        formData.set("backgroundImage", srcImage);
+        console.log(formData);
+        const res = await updateUserImages(formData);
+        console.log(res);
+        if (res.status === 200) {
+          dispatch(login(res.data));
+
+          setSpinner(false);
+          setUpdateImage(false);
+          reset();
+        }
+      } else {
+        formData.set("profileImage", srcImage);
+        console.log(formData);
+
+        const res = await updateUserImages(formData);
+        console.log(res.data);
+        console.log(res);
+        if (res.status === 200) {
+          dispatch(login(res.data));
+
+          setSpinner(false);
+          setUpdateImage(false);
+          reset();
+        }
+      }
+    }
+  };
+
+  return (
+    <>
+      {updateImage && (
+        <div className=" fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+          <div className="menu-container bg-slate-200 flex flex-col justify-between rounded-lg overflow-hidden w-1/2 h-4/5">
+            <div className="py-2 px-3 flex w-full  justify-start relative items-center">
+              <span className="text-xl font-semibold">{typeImage} </span>
+              <button
+                onClick={() => setUpdateImage(false)}
+                className="text-2xl absolute top-2 right-2"
+              >
+                <IoCloseSharp />
+              </button>
+            </div>
+            <div className="my-2 w-full text-center font-bold mx-auto">
+              {imgUrl ? (
+                <div className=" px-3 ">
+                  <img
+                    src={`${imgUrl}`}
+                    alt=""
+                    className={`${
+                      typeImage === "Background photo"
+                        ? "w-full"
+                        : "w-64 rounded-full"
+                    } mx-auto  h-64 border border-slate-300 border-solid`}
+                  />
+                </div>
+              ) : (
+                <div className=" px-3 ">
+                  <img
+                    src="/images/user.svg"
+                    alt=""
+                    className={`${
+                      typeImage === "Background photo"
+                        ? "w-full"
+                        : "w-64 rounded-full"
+                    } mx-auto  h-64 border border-slate-300 border-solid`}
+                  />
+                </div>
+              )}
+            </div>
+            <div
+              className={`border-4 my-2 border-solid mr-3 ${
+                spinner ? "opacity-1" : "opacity-0"
+              } border-gray-400 border-t-blue-500 rounded-full w-8 h-8 animate-spin`}
+            ></div>
+            <div className="flex overflow-auto justify-between flex-col pb-2 pr-3 bg-f7f7f7">
+              <div className="flex items-center justify-between ">
+                <div className="flex ml-4">
+                  <button
+                    className="action p-1 w-12"
+                    onClick={() => setImageShow(true)}
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="file"
+                      className="hidden"
+                      onChange={handleImage}
+                    />
+                    <p className="my-2">
+                      <label
+                        htmlFor="file"
+                        className="label-btn=  text-white p-2 rounded cursor-pointer"
+                      >
+                        <img
+                          src="/images/share-image.svg"
+                          alt=""
+                          className="w-full"
+                        />
+                      </label>
+                    </p>
+                  </button>
+                </div>
+                <div className="flex justify-between items-center">
+                  <button className="px-4 py-1 bg-red-600 text-white hover:bg-red-700 duration-300 rounded-full">
+                    Delete
+                  </button>
+                  <button
+                    disabled={!srcImage}
+                    className={`py-1 rounded-full px-4 mx-2 font-bold ${
+                      !srcImage ? "" : "bg-blue-600 text-white "
+                    }`}
+                    type="button"
+                    onClick={handleSubmit}
+                  >
+                    Update
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default UpdateImagePopup;
