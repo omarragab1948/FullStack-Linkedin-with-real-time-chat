@@ -2,15 +2,16 @@
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost, updateUserImages } from "../services/apiHandler";
+import {
+  deleteBackgroundImage,
+  deleteProfileImage,
+  updateUserImages,
+} from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
+import userImage from "../../public/images/user.svg";
+import Image from "next/image";
 
-const UpdateImagePopup = ({
-  updateImage,
-  setUpdateImage,
-
-  typeImage,
-}) => {
+const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (updateImage && e.target.closest(".menu-container") === null) {
@@ -38,7 +39,7 @@ const UpdateImagePopup = ({
   const [srcImage, setSrcImage] = useState(null);
   const [imageShow, setImageShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth?.user?.user);
   function handleImage(e) {
     const file = e.target.files[0];
     setSrcImage(file);
@@ -62,7 +63,6 @@ const UpdateImagePopup = ({
     e.preventDefault();
     setSpinner(true);
     const formData = new FormData();
-    console.log(typeImage);
     if (srcImage) {
       if (typeImage === "Background photo") {
         formData.set("backgroundImage", srcImage);
@@ -93,7 +93,35 @@ const UpdateImagePopup = ({
       }
     }
   };
+  const handleDelete = async () => {
+    setSpinner(true);
 
+    if (typeImage === "Profile photo") {
+      try {
+        const res = await deleteProfileImage();
+        if (res.status === 200) {
+          dispatch(login(res.data));
+          setSpinner(false);
+          setUpdateImage(false);
+          reset();
+        }
+      } catch (e) {
+        throw e;
+      }
+    } else {
+      try {
+        const res = await deleteBackgroundImage();
+        if (res.status === 200) {
+          dispatch(login(res.data));
+          setSpinner(false);
+          setUpdateImage(false);
+          reset();
+        }
+      } catch (e) {
+        throw e;
+      }
+    }
+  };
   return (
     <>
       {updateImage && (
@@ -111,9 +139,11 @@ const UpdateImagePopup = ({
             <div className="my-2 w-full text-center font-bold mx-auto">
               {imgUrl ? (
                 <div className=" px-3 ">
-                  <img
+                  <Image
                     src={`${imgUrl}`}
-                    alt=""
+                    alt="typeImage"
+                    width={1500}
+                    height={1500}
                     className={`${
                       typeImage === "Background photo"
                         ? "w-full"
@@ -123,9 +153,15 @@ const UpdateImagePopup = ({
                 </div>
               ) : (
                 <div className=" px-3 ">
-                  <img
-                    src="/images/user.svg"
-                    alt=""
+                  <Image
+                    src={
+                      typeImage === "Background photo"
+                        ? user.backgroundImage || userImage
+                        : user.profileImage || userImage
+                    }
+                    width={1500}
+                    height={1500}
+                    alt={`${typeImage}`}
                     className={`${
                       typeImage === "Background photo"
                         ? "w-full"
@@ -136,9 +172,9 @@ const UpdateImagePopup = ({
               )}
             </div>
             <div
-              className={`border-4 my-2 border-solid mr-3 ${
+              className={`border-4 my-2 border-solid mx-auto ${
                 spinner ? "opacity-1" : "opacity-0"
-              } border-gray-400 border-t-blue-500 rounded-full w-8 h-8 animate-spin`}
+              } border-gray-400 border-t-blue-500  rounded-full w-10 h-10 animate-spin`}
             ></div>
             <div className="flex overflow-auto justify-between flex-col pb-2 pr-3 bg-f7f7f7">
               <div className="flex items-center justify-between ">
@@ -169,7 +205,10 @@ const UpdateImagePopup = ({
                   </button>
                 </div>
                 <div className="flex justify-between items-center">
-                  <button className="px-4 py-1 bg-red-600 text-white hover:bg-red-700 duration-300 rounded-full">
+                  <button
+                    onClick={handleDelete}
+                    className="px-4 py-1 bg-red-600 text-white hover:bg-red-700 duration-300 rounded-full"
+                  >
                     Delete
                   </button>
                   <button

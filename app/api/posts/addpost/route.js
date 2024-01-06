@@ -48,16 +48,24 @@ export const POST = async (request) => {
         status: 400,
       });
     }
+    console.log();
+    existUser.posts.push(createdPost);
+    console.log(existUser);
 
+    const user = await existUser.save();
+
+    const data = {
+      user,
+      token: token.split(" ")[1],
+    };
     return Response.json({
       message: "Your article was added",
-      data: createdPost,
+      data,
       status: 201,
     });
   };
 
   if (image !== "null") {
-    // Check for explicit null
     try {
       const imageRef = ref(storage, `images/${v4()}`);
       await uploadBytes(imageRef, image);

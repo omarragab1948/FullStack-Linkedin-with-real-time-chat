@@ -18,7 +18,7 @@ export const signUp = async (user) => {
 };
 export const addPost = async (post) => {
   try {
-    const token = JSON.parse(localStorage.getItem("user")).token;
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
     const res = await axios.post("/api/posts/addpost", post, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -30,21 +30,61 @@ export const addPost = async (post) => {
     throw e;
   }
 };
-export const getPosts = async () => {
+export const getAllPosts = async () => {
   try {
-    const res = await axios.get("/api/posts/getposts");
+    const res = await axios.get("/api/posts/getallposts");
 
     return res.data;
   } catch (e) {
     throw e;
   }
 };
+export const getAllUsers = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
+    const res = await axios.get("/api/users/getusers", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
 export const updateUserImages = async (image) => {
-  console.log(image);
   try {
     const token = JSON.parse(localStorage.getItem("user")).token;
-    const res = await axios.post(`/api/users/updateuser`, image, {
+    const res = await axios.post(`/api/users/updateuserImages`, image, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const deleteProfileImage = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.delete(`/api/users/deleteprofileimage`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const deleteBackgroundImage = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.delete(`/api/users/deletebackgroundimage`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

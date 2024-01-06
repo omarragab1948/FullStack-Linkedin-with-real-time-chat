@@ -1,20 +1,21 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
-import user from "../../../public/images/user.svg";
+import userImage from "../../../public/images/user.svg";
 import share from "@/public/images/shared-image.jpg";
 import Link from "next/link";
 import PostModel from "@/app/components/PostModel";
 import UpdateImagePopup from "@/app/components/UpdateImagesPopup";
 import { FaPen } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { getUserPosts } from "@/app/services/apiHandler";
 
 const page = () => {
   const [show, setShow] = useState(false);
   const [updateImage, setUpdateImage] = useState(false);
   const [typeImage, setTypeImage] = useState("");
   const [activeTab, setActiveTab] = useState("posts");
-  const user = useSelector((state) => state.auth.user.updateUser);
+  const user = useSelector((state) => state.auth.user?.user);
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -122,10 +123,11 @@ const page = () => {
       image: "https://placekitten.com/82/80", // Replace with the actual image URL
     },
   ];
+
   return (
     <div className="flex mt-10 pl-[140px] pr-[170px]">
       <div className="w-[70%] mt-10 mr-4 ">
-        <div className="text-center w-full relative rounded-t-xl border border-solid border-slate-300">
+        <div className="text-center w-full h-96 pb-2 relative rounded-t-xl border border-solid border-slate-300">
           <button
             onClick={() => handleUpdateImage("Background photo")}
             className="absolute top-4 right-5 bg-white rounded-full p-2"
@@ -133,55 +135,70 @@ const page = () => {
             <FaPen />
           </button>
           <div className="w-full rounded-t-md">
-            <Image
-              src={user?.backgroundImage}
-              alt="user"
-              width={1500}
-              height={1500}
-              className="rounded-t-xl w-full h-48 mx-auto"
-            />
+            {user?.backgroundImage !== "" ? (
+              <Image
+                src={user?.backgroundImage}
+                alt="user"
+                width={3500}
+                height={3500}
+                className="rounded-t-xl w-full h-56 mx-auto"
+              />
+            ) : (
+              <div className="rounded-t-xl w-full h-64 mx-auto bg-gradient-to-b from-slate-400 to-slate-50"></div>
+            )}
           </div>
 
           <button
             onClick={() => handleUpdateImage("Profile photo")}
-            className="relative bottom-20 right-64 rounded-full "
+            className="absolute top-[108px] left-12 rounded-full "
           >
-            <img
-              src={user?.profileImage}
-              alt="user"
-              className="rounded-full w-40 h-40"
-            />
+            {user?.profileImage !== "" ? (
+              <Image
+                src={user?.profileImage}
+                alt="user"
+                className="rounded-full w-40 h-40"
+                width={1500}
+                height={1500}
+              />
+            ) : (
+              <Image
+                src={userImage}
+                alt="user"
+                className="rounded-full w-40 h-40"
+                width={1500}
+                height={1500}
+              />
+            )}
           </button>
           <UpdateImagePopup
             setUpdateImage={setUpdateImage}
             updateImage={updateImage}
             typeImage={typeImage}
           />
-          <div className="font-semibold flex relative bottom-16 left-10 text-xl leading-normal text-black  opacity-90">
+          <div className="font-semibold flex relative top-11 left-14 text-xl leading-normal text-black  opacity-90">
             <span>
-              {/* {userr.firstName} {userr.lastName} */}
-              Omar Mohamed
+              {user?.firstName} {user?.lastName}
             </span>
           </div>
 
-          <div className="font-normal flex relative bottom-16 left-10 text-lg leading-snug mt-1">
+          <div className="font-normal flex relative top-11 left-14 text-lg leading-snug mt-1">
             Front-End
           </div>
-          <div className="flex  bottom-14 relative left-10">
+          <div className="flex top-11 relative left-14">
             <span className="opacity-70">Alexandria</span>
             <span className="mx-3 opacity-70">Egypt</span>
             <button href="" className="text-blue-600 font-semibold">
               Contact info
             </button>
           </div>
-          <div className="flex  bottom-12 relative left-10">
+          <div className="flex top-11  relative left-14">
             <button href="" className="text-blue-600 font-semibold">
               244 Connections
             </button>
           </div>
         </div>
         <div className="my-4 p-4 border border-solid border-slate-300">
-          <Link href="" className="flex items-center">
+          <Link href="/home/network" className="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -246,11 +263,11 @@ const page = () => {
               </div>
               <div>
                 {activeTab === "comments" ? (
-                  <div className="flex flex-col items-start justify-start">
+                  <div className="flex flex-col items-start justify-start h-42">
                     {comments.slice(0, 3).map((comment) => (
                       <button
                         onClick={() => console.log(comment.postId)}
-                        className="flex items-start justify-center flex-col h-16 my-1"
+                        className="flex items-start justify-center flex-col h-20 my-1"
                       >
                         <span className="text-sm opacity-90">
                           Omar Mohamed commented on a post
@@ -261,26 +278,33 @@ const page = () => {
                   </div>
                 ) : (
                   <>
-                    {posts.slice(0, 3).map((post) => (
-                      <button
-                        onClick={() => console.log(post.id)}
-                        className="flex flex-col items-start h-16 my-1"
-                      >
-                        <span className="text-sm opacity-90">
-                          Omar Mohamed posted this 2023-10-3
-                        </span>
-                        <div className="flex items-center">
-                          <Image
-                            src={post.image}
-                            alt="post"
-                            className="w-12 h-12"
-                          />
-                          <p className="text-sm font-semibold opacity-90">
-                            {post.content}
-                          </p>
-                        </div>
-                      </button>
-                    ))}
+                    {user?.posts
+                      .slice()
+                      .reverse()
+                      .slice(0, 3)
+                      .map((post) => (
+                        <button
+                          onClick={() => console.log(post?._id)}
+                          className="flex flex-col items-start h-20 my-1"
+                        >
+                          <span className="text-sm opacity-90">
+                            {user?.firstName} {user?.lastName} posted this at
+                            {post.date}
+                          </span>
+                          <div className="flex items-center">
+                            <Image
+                              src={post.image}
+                              alt="post"
+                              className="w-12 h-12"
+                              width={1500}
+                              height={1500}
+                            />
+                            <p className="text-sm font-semibold opacity-90">
+                              {post.content}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
                   </>
                 )}
               </div>

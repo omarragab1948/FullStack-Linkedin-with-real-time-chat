@@ -1,10 +1,27 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import share from "@/public/images/shared-image.jpg";
 import user from "@/public/images/user.svg";
 import Image from "next/image";
+import { getAllUsers } from "@/app/services/apiHandler";
 
 const page = () => {
+  const [users, setUsers] = useState([]);
+  const handleGetUsers = async () => {
+    try {
+      const res = await getAllUsers();
+      if (res.status === 200) {
+        setUsers(res.data);
+      }
+    } catch (err) {
+      throw err;
+    }
+  };
+  useEffect(() => {
+    handleGetUsers();
+  }, []);
+
   return (
     <div className="container flex  mx-auto py-4 px-16 mt-20 ">
       <div className="w-1/5 flex flex-col border border-solid h-32 border-slate-300 py-4 px-3">
@@ -31,7 +48,7 @@ const page = () => {
         </Link>
       </div>
       <div className="flex flex-wrap items-center justify-center w-4/5 ml-4 border border-slate-300 border-solid p-3">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item, i) => (
+        {users?.map((item, i) => (
           <div className="w-1/4 flex flex-col m-2 items-center justify-center border border-slate-300 border-solid rounded-t-xl pb-2">
             <div className="w-full">
               <Image
@@ -52,8 +69,7 @@ const page = () => {
             </div>
             <div className="font-semibold flex justify-center relative bottom-6 text-base leading-normal text-black  opacity-90">
               <span>
-                {/* {userr.firstName} {userr.lastName} */}
-                Omar Mohamed
+                {item?.firstName} {item?.lastName}
               </span>
             </div>
 

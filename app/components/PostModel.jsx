@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../services/apiHandler";
+import { login } from "../rtk/authSlice";
 
 const PostModel = ({ show, setShow, handlePostAdded }) => {
   const handleDocumentClick = (e) => {
@@ -30,7 +31,7 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
   const [srcImage, setSrcImage] = useState(null);
   const [imageShow, setImageShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user.user);
   function handleImage(e) {
     const file = e.target.files[0];
     setSrcImage(file);
@@ -61,8 +62,9 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
       const res = await addPost(formData);
       console.log(res);
       if (res.status === 201) {
-        setSpinner(false);
         handlePostAdded();
+        dispatch(login(res.data));
+        setSpinner(false);
         setShow(false);
         reset();
       }
@@ -76,16 +78,16 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
           <div className="menu-container bg-white flex flex-col justify-between rounded-lg overflow-hidden w-1/2 h-4/5">
             <div className="py-2 px-3 flex w-full flex-col justify-between relative items-center">
               <div className="flex items-center w-full mt-2">
-                {user && user?.photoURL ? (
+                {user && user?.profileImage ? (
                   <img
-                    src={user?.photoURL}
+                    src={user?.profileImage}
                     alt=""
-                    className="rounded-full w-12 mr-2"
+                    className="rounded-full w-14 h-14 mr-2"
                   />
                 ) : (
                   <img
                     src="/images/user.svg"
-                    className="rounded-full w-12 mr-2"
+                    className="rounded-full w-14 h-14 mr-2"
                     alt=""
                   />
                 )}
@@ -132,7 +134,7 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
               </div>
               <div className="my-2 w-full text-center font-bold mx-auto">
                 {imgUrl && (
-                  <div className="h-48 overflow-auto mx-auto px-3">
+                  <div className="h-48 overflow-auto w-full px-3">
                     <img src={`${imgUrl}`} alt="" />
                   </div>
                 )}

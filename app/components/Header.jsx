@@ -256,7 +256,7 @@ const Header = () => {
                       />
                     </div>
                     <div className="flex flex-col ml-2">
-                      <h5 className="font-semibold text-base">{`${user.firstName} ${user.lastName}`}</h5>
+                      <h5 className="font-semibold text-base">{`${user?.firstName} ${user?.lastName}`}</h5>
                       <span>{user?.title}</span>
                     </div>
                   </div>

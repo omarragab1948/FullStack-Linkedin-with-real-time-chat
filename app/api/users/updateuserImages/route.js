@@ -59,7 +59,7 @@ export const POST = async (request) => {
           });
         }
         const data = {
-          updateUser: updatedUser,
+          user: updatedUser,
           token: token.split(" ")[1],
         };
         return Response.json({

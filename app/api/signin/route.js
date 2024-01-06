@@ -34,7 +34,7 @@ export const POST = async (request) => {
     }
     const token = await handleToken(existedUser._id);
     const data = {
-      existedUser,
+      user: existedUser,
       token,
     };
     const response = NextResponse.json({

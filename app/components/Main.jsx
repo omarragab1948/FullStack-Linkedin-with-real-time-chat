@@ -6,7 +6,7 @@ import article from "@/public/images/shared-image.jpg";
 import Image from "next/image";
 import PostModel from "./PostModel";
 import { useEffect, useState } from "react";
-import { getPosts } from "../services/apiHandler";
+import { getAllPosts } from "../services/apiHandler";
 const Main = () => {
   const [show, setShow] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -14,7 +14,7 @@ const Main = () => {
   const getData = async () => {
     setSpinner(true);
     try {
-      const res = await getPosts();
+      const res = await getAllPosts();
       setPosts(res.data);
       console.log(res);
       setSpinner(false);
