@@ -110,11 +110,111 @@ export const addEducation = async (formData) => {
   }
 };
 
+export const UpdateEducation = async (formData, id) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.put(`/api/users/education/update/${id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
 export const deleteEducation = async (id) => {
   console.log(id);
   try {
     const token = JSON.parse(localStorage.getItem("user")).token;
     const res = await axios.delete(`/api/users/education/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const addAbout = async (formData) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.post(`/api/users/about/update`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const deleteAbout = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.delete(`/api/users/about/delete`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const addSkill = async (formData) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.post(`/api/users/skills/add`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const deleteSkill = async (id) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.delete(`/api/users/skills/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const addLanguage = async (formData) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.post(`/api/users/languages/add`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const deleteLanguage = async (id) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.delete(`/api/users/languages/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

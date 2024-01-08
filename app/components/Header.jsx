@@ -72,7 +72,7 @@ const Header = () => {
     },
   ];
   return (
-    <header className="bg-white bg-main-dark-bg fixed top-0 w-full lg:px-24 z-50">
+    <header className="bg-white bg-main-dark-bg fixed top-0 w-[98%] lg:px-24 z-50">
       <div className=" p-2 m-auto flex justify-start px-10 md:justify-between items-center">
         <div className="flex mr-2 w-full sm:w-full md:w-fit justify-center items-center">
           <div>
@@ -102,8 +102,8 @@ const Header = () => {
             />
           </div>
         </div>
-        <nav className="lg:w-2/3 py-2 md:w-3/5 flex fixed sm:relative justify-center bottom-0 left-0 w-full md:justify-end z-50 bg-white md:top-0">
-          <ul className="flex items-center w-full justify-around">
+        <nav className="lg:w-2/3 py-2 md:w-3/5 flex fixed sm:relative justify-center bottom-0 left-0 w-[98%] md:justify-end z-50 bg-white md:top-0">
+          <ul className="flex items-center w-[98%]  justify-around">
             <Link
               href="/home"
               className={`${

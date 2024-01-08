@@ -50,6 +50,17 @@ const educationSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+const skillSchema = new mongoose.Schema({
+  skill: {
+    type: String,
+  },
+});
+const languageSchema = new mongoose.Schema({
+  language: {
+    type: String,
+  },
+});
 const userSchema = new mongoose.Schema({
   backgroundImage: {
     type: String,
@@ -82,6 +93,11 @@ const userSchema = new mongoose.Schema({
   },
   posts: [postSchema],
   education: [educationSchema],
+  about: {
+    type: String,
+  },
+  skills: [skillSchema],
+  languages: [languageSchema],
 });
 
 const User = models.User || mongoose.model("User", userSchema);

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addEducation, deleteEducation } from "../services/apiHandler";
+import { UpdateEducation, addEducation } from "../services/apiHandler";
 import { useDispatch } from "react-redux";
 import { login } from "../rtk/authSlice";
 
-const EducationForm = ({ show, update, setShow }) => {
+const EducationForm = ({ show, update, setShow, id }) => {
+  console.log(id);
   const dispatch = useDispatch();
   const [spinner, setSpinner] = useState(false);
 
@@ -34,18 +35,6 @@ const EducationForm = ({ show, update, setShow }) => {
       grade: "",
     });
   }, [show]);
-  const handleDeleteEducation = async () => {
-    try {
-      const res = await deleteEducation();
-      console.log(res.data);
-      if (res.status === 200) {
-        dispatch(login(res.data));
-        setShow(false);
-      }
-    } catch (err) {
-      throw err;
-    }
-  };
   const handleEducationSubmit = async () => {
     setSpinner(true);
     const formData = new FormData();
@@ -57,6 +46,27 @@ const EducationForm = ({ show, update, setShow }) => {
 
     try {
       const res = await addEducation(formData);
+      console.log(res.data);
+      if (res.status === 200) {
+        dispatch(login(res.data));
+        setSpinner(false);
+        setShow(false);
+      }
+    } catch (err) {
+      throw err;
+    }
+  };
+  const handleEducationUpdate = async () => {
+    setSpinner(true);
+    const formData = new FormData();
+    formData.set("institution", education.institution);
+    formData.set("department", education.department);
+    formData.set("startDate", education.startDate);
+    formData.set("endDate", education.endDate);
+    formData.set("grade", education.grade);
+
+    try {
+      const res = await UpdateEducation(formData, id);
       console.log(res.data);
       if (res.status === 200) {
         dispatch(login(res.data));
@@ -190,7 +200,7 @@ const EducationForm = ({ show, update, setShow }) => {
           </button>
         ) : (
           <button
-            onClick={handleEducationSubmit}
+            onClick={handleEducationUpdate}
             disabled={
               education.institution === "" ||
               education.startDate === "" ||

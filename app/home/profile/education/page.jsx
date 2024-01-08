@@ -20,7 +20,8 @@ const page = () => {
   const [id, setId] = useState("");
   const user = useSelector((state) => state.auth.user?.user);
   const dispatch = useDispatch();
-  const handleUpdateContent = (content, type) => {
+  const handleUpdateContent = (content, type, eduId) => {
+    setId(eduId);
     setShowEducation(true);
     setTypeUpdate(content);
     if (type === "add") {
@@ -44,6 +45,7 @@ const page = () => {
       throw err;
     }
   };
+
   return (
     <div className="mt-20 flex  justify-center items-start w-full">
       <Link href="/home/profile" className="my-4 flex items-center">
@@ -63,35 +65,40 @@ const page = () => {
           </button>
         </div>
         <div className="flex flex-col items-center mt-4">
-          {user?.education.map((e, i) => (
-            <div
-              key={i}
-              className="flex  w-full my-4 hover:bg-slate-300 duration-300 p-3 rounded-md items-center justify-between ml-3"
-            >
-              <div className="flex flex-col">
-                <span className="font-semibold">{e.institution}</span>
-                <span className="text-sm">{e.department}</span>
-                <span className="text-sm opacity-70">
-                  {e.startDate} - {e.endDate}
-                </span>
-                <span className="text-sm">Grade: {e.grade}</span>
+          {user?.education
+            .slice()
+            .reverse()
+            .map((e, i) => (
+              <div
+                key={i}
+                className="flex  w-full my-4 hover:bg-slate-300 duration-300 p-3 rounded-md items-center justify-between ml-3"
+              >
+                <div className="flex flex-col">
+                  <span className="font-semibold">{e.institution}</span>
+                  <span className="text-sm">{e.department}</span>
+                  <span className="text-sm opacity-70">
+                    {e.startDate} - {e.endDate}
+                  </span>
+                  <span className="text-sm">Grade: {e.grade}</span>
+                </div>
+                <div className="flex items-center flex-col justify-center">
+                  <button
+                    onClick={() =>
+                      handleUpdateContent("Education", "update", e?._id)
+                    }
+                    className="text-xl"
+                  >
+                    <FaPen />
+                  </button>
+                  <button
+                    onClick={() => handleShowDelete(e?._id)}
+                    className=" text-2xl text-red-500 mt-4"
+                  >
+                    <MdDelete />
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center flex-col justify-center">
-                <button
-                  onClick={() => handleUpdateContent("Education", "update")}
-                  className="text-xl"
-                >
-                  <FaPen />
-                </button>
-                <button
-                  onClick={() => handleShowDelete(e?._id)}
-                  className=" text-2xl text-red-500 mt-4"
-                >
-                  <MdDelete />
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
       {showDelete && (
@@ -125,6 +132,7 @@ const page = () => {
         setShowProfilePop={setShowEducation}
         type={typeUpdate}
         update={update}
+        id={id}
       />
     </div>
   );

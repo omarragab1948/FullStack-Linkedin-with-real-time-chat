@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import userImage from "../../../public/images/user.svg";
-import share from "@/public/images/shared-image.jpg";
 import Link from "next/link";
 import PostModel from "@/app/components/PostModel";
 import UpdateImagePopup from "@/app/components/UpdateImagesPopup";
 import { FaPen } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import UpdateProfilePopup from "@/app/components/UpdateProfilePopup";
+import { getAllUsers } from "@/app/services/apiHandler";
 
 const page = () => {
   const [show, setShow] = useState(false);
@@ -36,73 +36,21 @@ const page = () => {
     { content: "afaf", postId: 3 },
   ];
 
-  const education = {
-    id: 1,
-    institution: "University of Example",
-    department: "Computer Science",
-    startDate: "2018-09",
-    endDate: "2022-06",
-    grade: "Excellent",
+  const [users, setUsers] = useState([]);
+  const handleGetUsers = async () => {
+    try {
+      const res = await getAllUsers();
+      if (res.status === 200) {
+        setUsers(res.data);
+      }
+    } catch (err) {
+      throw err;
+    }
   };
-  const skills = [
-    "HTML5",
-    "CSS3",
-    "JavaScript",
-    "React.js",
-    "Vue.js",
-    "Angular",
-    "Sass",
-    "Webpack",
-    "Responsive Design",
-    "AJAX",
-    "RESTful APIs",
-    "GraphQL",
-    "Version Control (Git)",
-    "Bootstrap",
-    "Tailwind CSS",
-    "Jest",
-    "TypeScript",
-    "Redux",
-    "State Management",
-  ];
-  const users = [
-    {
-      id: 1,
-      name: "John Doe",
-      title: "Web Developer",
-      image: "https://placekitten.com/80/80", // Replace with the actual image URL
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      title: "UI/UX Designer",
-      image: "https://placekitten.com/81/80", // Replace with the actual image URL
-    },
-    {
-      id: 3,
-      name: "Bob Johnson",
-      title: "Software Engineer",
-      image: "https://placekitten.com/82/80", // Replace with the actual image URL
-    },
-    {
-      id: 1,
-      name: "John Doe",
-      title: "Web Developer",
-      image: "https://placekitten.com/80/80", // Replace with the actual image URL
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      title: "UI/UX Designer",
-      image: "https://placekitten.com/81/80", // Replace with the actual image URL
-    },
-    {
-      id: 3,
-      name: "Bob Johnson",
-      title: "Software Engineer",
-      image: "https://placekitten.com/82/80", // Replace with the actual image URL
-    },
-  ];
+  useEffect(() => {
+    handleGetUsers();
+  }, []);
+  console.log(users);
   function formatTimestamp(timestampString) {
     const timestampDate = new Date(timestampString);
 
@@ -112,8 +60,8 @@ const page = () => {
     return formattedDate;
   }
   return (
-    <div className="flex mt-10 pl-[140px] pr-[170px]">
-      <div className="w-[70%] mt-10 mr-4 ">
+    <div className="flex-col flex justify-center md:flex-row mt-10 px-10 md:pl-[140px] md:pr-[170px]">
+      <div className="w-full md:w-[70%] mt-10 mr-4 ">
         <div className="text-center w-full h-96 pb-2 relative rounded-t-xl border border-solid border-slate-300">
           <button
             onClick={() => handleUpdateImage("Background photo")}
@@ -137,13 +85,13 @@ const page = () => {
 
           <button
             onClick={() => handleUpdateImage("Profile photo")}
-            className="absolute top-[108px] left-12 rounded-full "
+            className="absolute top-[139px] md:top-[108px] left-12 rounded-full "
           >
             {user?.profileImage !== "" ? (
               <Image
                 src={user?.profileImage}
                 alt="user"
-                className="rounded-full w-40 h-40"
+                className="rounded-full w-32 h-32 md:w-40 md:h-40"
                 width={1500}
                 height={1500}
               />
@@ -180,7 +128,7 @@ const page = () => {
           </div>
           <div className="flex top-11  relative left-14">
             <button href="" className="text-blue-600 font-semibold">
-              244 Connections
+              {user?.connections || 0} Connections
             </button>
           </div>
         </div>
@@ -212,12 +160,7 @@ const page = () => {
           <span className="mb-4 text-xl leading-normal text-black  opacity-90 font-semibold">
             About
           </span>
-          <p className="w-1/2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas,
-            culpa, voluptates nihil quos est voluptatem aperiam eaque eius
-            ducimus amet accusamus asperiores molestiae recusandae iste?
-            Distinctio cum perferendis quidem itaque.
-          </p>
+          <p className="w-1/2">{user?.about}</p>
         </div>
         <div className="flex flex-col relative border border-solid border-slate-300 mt-4 py-2">
           <button
@@ -348,18 +291,18 @@ const page = () => {
             Skills
           </span>
           <div className="flex items-start flex-col mt-4">
-            {skills.slice(0, 3).map((skill, index) => (
+            {user?.skills?.slice(0, 3).map((skill, index) => (
               <span key={index} className="font-semibold opacity-80 text-md">
-                {skill}
+                {skill.skill}
               </span>
             ))}
           </div>
-          <Link
-            href=""
+          <button
+            onClick={() => handleUpdateContent("Skills")}
             className="w-full text-lg flex justify-center font-semibold opacity-70 mt-3"
           >
             Show all skills
-          </Link>
+          </button>
         </div>
         <div className="my-4 p-4 relative border border-solid border-slate-300">
           <button
@@ -372,7 +315,11 @@ const page = () => {
             Languages
           </span>
           <div className="flex items-start flex-col mt-4">
-            <span className="font-semibold opacity-80 text-md">English</span>
+            {user?.languages?.slice(0, 3).map((language, index) => (
+              <span key={index} className="font-semibold opacity-80 text-md">
+                {language.language}
+              </span>
+            ))}
           </div>
         </div>
       </div>
@@ -381,23 +328,25 @@ const page = () => {
         setShowProfilePop={setShowProfilePop}
         type={typeUpdate}
       />
-      <div className="w-[30%] p-4 mt-10">
+      <div className="w-full md:w-[30%] p-4 mt-10">
         {users.map((user) => (
           <div
             key={user.id}
             className="flex  items-start justify-center w-full mb-4"
           >
-            <img
-              src={user.image}
-              alt={user.name}
-              className="w-14 h-14 rounded-full mb-2"
+            <Image
+              src={user?.image || userImage}
+              alt={user?.firstName}
+              className="w-10 h-10 rounded-full mb-2"
+              width={1500}
+              height={1500}
             />
             <div className="flex flex-col w-4/5 ml-3 justify-start items-start">
               <p className="text-center text-gray-800 font-semibold text-sm">
-                {user.name}
+                {user?.firstName} {user?.lastName}
               </p>
-              <p className="text-center text-gray-500 text-xs">{user.title}</p>
-              <button className="mt-3 py-1 px-5 border border-solid border-slate-800 rounded-full">
+              <p className="text-center text-gray-500 text-xs">{user?.title}</p>
+              <button className="mt-3 py-1 px-5 border border-solid border-slate-800 hover:border-blue-500 hover:bg-blue-500 hover:text-white duration-300 rounded-full">
                 Connect
               </button>
             </div>

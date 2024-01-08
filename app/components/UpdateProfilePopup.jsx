@@ -4,12 +4,26 @@ import { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import EducationForm from "./EducationForm";
 import { MdDelete } from "react-icons/md";
+import {
+  addAbout,
+  addLanguage,
+  addSkill,
+  deleteAbout,
+  deleteLanguage,
+  deleteSkill,
+} from "../services/apiHandler";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../rtk/authSlice";
 
-const UpdateProfilePopup = ({ show, setShowProfilePop, type, update }) => {
-  const [editorText, setEditorText] = useState("");
-  const [addSkill, setAddSkill] = useState("");
-  const [addLanguage, setAddLanguage] = useState("");
+const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
+  const user = useSelector((state) => state.auth.user?.user);
 
+  const [editorText, setEditorText] = useState(user?.about);
+  const [addSkills, setAddSkills] = useState("");
+  const [addLanguages, setAddLanguages] = useState("");
+  const [spinner, setSpinner] = useState(false);
+
+  const dispatch = useDispatch();
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (show && e.target.closest(".menu-container") === null) {
@@ -26,27 +40,96 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update }) => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [show]);
-  const skills = [
-    "HTML5",
-    "CSS3",
-    "JavaScript",
-    "React.js",
-    "Vue.js",
-    "Angular",
-    "Sass",
-    "Webpack",
-    "Responsive Design",
-    "AJAX",
-    "RESTful APIs",
-    "GraphQL",
-    "Version Control (Git)",
-    "Bootstrap",
-    "Tailwind CSS",
-    "Jest",
-    "TypeScript",
-    "Redux",
-    "State Management",
-  ];
+
+  const handleAddAbout = async () => {
+    setSpinner(true);
+    const formData = new FormData();
+    formData.set("about", editorText);
+    try {
+      const res = await addAbout(formData);
+      if (res.status === 200) {
+        dispatch(login(res.data));
+        setSpinner(false);
+        setShowProfilePop(false);
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
+  const handleAddSkill = async () => {
+    setSpinner(true);
+    const formData = new FormData();
+    formData.set("skill", addSkills);
+    try {
+      const res = await addSkill(formData);
+      if (res.status === 200) {
+        dispatch(login(res.data));
+        setSpinner(false);
+        setShowProfilePop(false);
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
+  const handleDeleteAbout = async () => {
+    setSpinner(true);
+
+    try {
+      const res = await deleteAbout();
+      if (res.status === 200) {
+        dispatch(login(res.data));
+        setSpinner(false);
+        setShowProfilePop(false);
+        setEditorText("");
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
+  const handleDeleteSkill = async (id) => {
+    setSpinner(true);
+
+    try {
+      const res = await deleteSkill(id);
+      if (res.status === 200) {
+        dispatch(login(res.data));
+        setSpinner(false);
+        setShowProfilePop(false);
+        setEditorText("");
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
+  const handleAddLanguage = async () => {
+    setSpinner(true);
+    const formData = new FormData();
+    formData.set("language", addLanguages);
+    try {
+      const res = await addLanguage(formData);
+      if (res.status === 200) {
+        dispatch(login(res.data));
+        setSpinner(false);
+        setShowProfilePop(false);
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
+  const handleDeleteLanguage = async (id) => {
+    setSpinner(true);
+    try {
+      const res = await deleteLanguage(id);
+      if (res.status === 200) {
+        dispatch(login(res.data));
+        setSpinner(false);
+        setShowProfilePop(false);
+        setEditorText("");
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
   return (
     <>
       {show && (
@@ -69,13 +152,22 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update }) => {
                   placeholder="What do you want to talk about?"
                   className="p-2 w-full h-48 focus:border-none focus:outline-blue-500  bg-white"
                 />
-                <div>
-                  <button className="px-3 py-1 mt-3 duration-300 bg-red-600 hover:bg-red-700 rounded-full text-white">
+                <div className="flex items-center">
+                  <div
+                    className={`border-4 my-2 border-solid mr-4 ${
+                      spinner ? "opacity-1" : "opacity-0"
+                    } border-gray-400 border-t-blue-500  rounded-full w-10 h-10 animate-spin`}
+                  ></div>
+                  <button
+                    onClick={handleDeleteAbout}
+                    className="px-3 py-1 mt-3 duration-300 bg-red-600 hover:bg-red-700 rounded-full text-white"
+                  >
                     Delete
                   </button>
                   <button
+                    onClick={handleAddAbout}
                     disabled={editorText === ""}
-                    className={`px-3 py-1 mt-3 duration-300 ${
+                    className={`px-3 py-1 mt-3 ml-3 duration-300 ${
                       editorText === ""
                         ? "text-black"
                         : "text-white bg-blue-600  rounded-full "
@@ -92,13 +184,14 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update }) => {
                   show={show}
                   setShow={setShowProfilePop}
                   update={update}
+                  id={id}
                 />
               </div>
             )}
             {type === "Skills" && (
               <div className="p-4 flex flex-col items-end">
                 <div className="h-96 overflow-auto w-full mb-6">
-                  {skills.map((skill, index) => (
+                  {user?.skills?.map((skill, index) => (
                     <div
                       key={index}
                       className="flex justify-between items-center my-3 p-3 hover:bg-slate-400 hover:text-white font-bold duration-300 rounded-md"
@@ -107,9 +200,12 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update }) => {
                         key={index}
                         className="font-semibold opacity-80 text-md"
                       >
-                        {skill}
+                        {skill.skill}
                       </span>
-                      <button className="text-red-500 text-3xl">
+                      <button
+                        onClick={() => handleDeleteSkill(skill?._id)}
+                        className="text-red-500 text-3xl"
+                      >
                         <MdDelete />
                       </button>
                     </div>
@@ -119,45 +215,82 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update }) => {
                   <input
                     type="text"
                     name="skill"
-                    value={addSkill}
-                    onChange={(e) => setAddSkill(e.target.value)}
+                    value={addSkills}
+                    onChange={(e) => setAddSkills(e.target.value)}
                     placeholder="add a skill"
                     className="w-full p-2 mb-3 rounded-md border border-solid border-blue-500 focus:outline-none focus:border-blue-600"
                   />
-                  <button
-                    disabled={addSkill === ""}
-                    className={`px-3 py-1 mt-3 duration-300 ${
-                      addSkill === ""
-                        ? "text-black"
-                        : "text-white bg-blue-600  rounded-full "
-                    }`}
-                  >
-                    Add a skill
-                  </button>
+                  <div className="flex">
+                    <div
+                      className={`border-4 my-2 border-solid mr-4 ${
+                        spinner ? "opacity-1" : "opacity-0"
+                      } border-gray-400 border-t-blue-500  rounded-full w-8 h-8 animate-spin`}
+                    ></div>
+                    <button
+                      onClick={handleAddSkill}
+                      disabled={addSkills === ""}
+                      className={`px-3 py-1 mt-3 duration-300 ${
+                        addSkill === ""
+                          ? "text-black"
+                          : "text-white bg-blue-600  rounded-full "
+                      }`}
+                    >
+                      Add a skill
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
             {type === "Languages" && (
               <div className="p-4 flex flex-col items-end">
+                <div className="h-96 overflow-auto w-full mb-6">
+                  {user?.languages?.map((language, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center my-3 p-3 hover:bg-slate-400 hover:text-white font-bold duration-300 rounded-md"
+                    >
+                      <span
+                        key={index}
+                        className="font-semibold opacity-80 text-md"
+                      >
+                        {language.language}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteLanguage(language?._id)}
+                        className="text-red-500 text-3xl"
+                      >
+                        <MdDelete />
+                      </button>
+                    </div>
+                  ))}
+                </div>
                 <div className="flex flex-col justify-end items-end w-full">
                   <input
                     type="text"
                     name="language"
-                    value={addLanguage}
-                    onChange={(e) => setAddLanguage(e.target.value)}
+                    value={addLanguages}
+                    onChange={(e) => setAddLanguages(e.target.value)}
                     placeholder="add a language"
                     className="w-full p-2 mb-3 rounded-md border border-solid border-blue-500 focus:outline-none focus:border-blue-600"
                   />
-                  <button
-                    disabled={addLanguage === ""}
-                    className={`px-3 py-1 mt-3 duration-300 ${
-                      addLanguage === ""
-                        ? "text-black"
-                        : "text-white bg-blue-600  rounded-full "
-                    }`}
-                  >
-                    Add a language
-                  </button>
+                  <div className="flex items-center">
+                    <div
+                      className={`border-4 my-2 border-solid mr-4 ${
+                        spinner ? "opacity-1" : "opacity-0"
+                      } border-gray-400 border-t-blue-500  rounded-full w-8 h-8 animate-spin`}
+                    ></div>
+                    <button
+                      onClick={handleAddLanguage}
+                      disabled={addLanguages === ""}
+                      className={`px-3 py-1 mt-3 duration-300 ${
+                        addLanguages === ""
+                          ? "text-black"
+                          : "text-white bg-blue-600  rounded-full "
+                      }`}
+                    >
+                      Add a language
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
