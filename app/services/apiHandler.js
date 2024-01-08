@@ -95,3 +95,33 @@ export const deleteBackgroundImage = async () => {
     throw e;
   }
 };
+export const addEducation = async (formData) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.post(`/api/users/education/add`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const deleteEducation = async (id) => {
+  console.log(id);
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    const res = await axios.delete(`/api/users/education/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};

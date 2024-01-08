@@ -8,10 +8,12 @@ import PostModel from "@/app/components/PostModel";
 import UpdateImagePopup from "@/app/components/UpdateImagesPopup";
 import { FaPen } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { getUserPosts } from "@/app/services/apiHandler";
+import UpdateProfilePopup from "@/app/components/UpdateProfilePopup";
 
 const page = () => {
   const [show, setShow] = useState(false);
+  const [showProfilePop, setShowProfilePop] = useState(false);
+  const [typeUpdate, setTypeUpdate] = useState("");
   const [updateImage, setUpdateImage] = useState(false);
   const [typeImage, setTypeImage] = useState("");
   const [activeTab, setActiveTab] = useState("posts");
@@ -19,14 +21,13 @@ const page = () => {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+  const handleUpdateContent = (content) => {
+    setShowProfilePop(true);
+    setTypeUpdate(content);
+  };
   const handleUpdateImage = (type) => {
-    if (type === "Profile photo") {
-      setTypeImage("Profile photo");
-      setUpdateImage(true);
-    } else {
-      setTypeImage("Background photo");
-      setUpdateImage(true);
-    }
+    setUpdateImage(true);
+    setTypeImage(type);
   };
   const comments = [
     { content: "yasda", postId: 1 },
@@ -34,28 +35,7 @@ const page = () => {
     { content: "afaf", postId: 3 },
     { content: "afaf", postId: 3 },
   ];
-  const posts = [
-    {
-      id: 1,
-      content: "hello omar",
-      image: user,
-    },
-    {
-      id: 2,
-      content: "hello ahmed",
-      image: user,
-    },
-    {
-      id: 3,
-      content: "hello ali",
-      image: user,
-    },
-    {
-      id: 4,
-      content: "hello hazem",
-      image: user,
-    },
-  ];
+
   const education = {
     id: 1,
     institution: "University of Example",
@@ -123,7 +103,14 @@ const page = () => {
       image: "https://placekitten.com/82/80", // Replace with the actual image URL
     },
   ];
+  function formatTimestamp(timestampString) {
+    const timestampDate = new Date(timestampString);
 
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    const formattedDate = timestampDate.toLocaleDateString(undefined, options);
+
+    return formattedDate;
+  }
   return (
     <div className="flex mt-10 pl-[140px] pr-[170px]">
       <div className="w-[70%] mt-10 mr-4 ">
@@ -215,7 +202,13 @@ const page = () => {
             <span className="ml-2 text-xl opacity-70">My Network</span>
           </Link>
         </div>
-        <div className="flex flex-col p-4 border border-solid border-slate-300">
+        <div className="my-4 p-4 relative border border-solid border-slate-300">
+          <button
+            onClick={() => handleUpdateContent("About")}
+            className="absolute top-4 right-5 bg-white rounded-full p-2"
+          >
+            <FaPen />
+          </button>
           <span className="mb-4 text-xl leading-normal text-black  opacity-90 font-semibold">
             About
           </span>
@@ -287,15 +280,17 @@ const page = () => {
                           onClick={() => console.log(post?._id)}
                           className="flex flex-col items-start h-20 my-1"
                         >
-                          <span className="text-sm opacity-90">
-                            {user?.firstName} {user?.lastName} posted this at
-                            {post.date}
-                          </span>
-                          <div className="flex items-center">
+                          <div className="text-sm opacity-90">
+                            <span className="mr-1">
+                              {user?.firstName} {user?.lastName} posted this at
+                            </span>
+                            <span>{formatTimestamp(post.date)}</span>
+                          </div>
+                          <div className="flex items-center mt-2">
                             <Image
                               src={post.image}
                               alt="post"
-                              className="w-12 h-12"
+                              className="w-12 h-12 mr-2"
                               width={1500}
                               height={1500}
                             />
@@ -315,25 +310,40 @@ const page = () => {
             Show all {activeTab}
           </Link>
         </div>
-        <div className="my-4 p-4 border border-solid border-slate-300">
+        <div className="my-4 p-4 relative border border-solid border-slate-300">
+          <Link
+            href="/home/profile/education"
+            className="absolute top-4 right-5 bg-white rounded-full p-2"
+          >
+            <FaPen />
+          </Link>
           <span className="mb-2 text-xl leading-normal text-black opacity-90 font-semibold">
             Education
           </span>
-          <div className="flex items-center mt-4">
-            <div>
-              <Image src={user} alt="user" className="w-14 h-14" />
-            </div>
-            <div className="flex flex-col items-start ml-3">
-              <span className="font-semibold">{education.institution}</span>
-              <span className="text-sm">{education.department}</span>
-              <span className="text-sm opacity-70">
-                {education.startDate} - {education.endDate}
-              </span>
-              <span className="text-sm">Grade: {education.grade}</span>
-            </div>
+          <div className="flex items-start flex-col mt-4">
+            {user?.education
+              .slice()
+              .reverse()
+              .slice(0, 3)
+              .map((ed, i) => (
+                <div key={i} className="flex flex-col items-start ml-3">
+                  <span className="font-semibold">{ed.institution}</span>
+                  <span className="text-sm">{ed.department}</span>
+                  <span className="text-sm opacity-70">
+                    {ed.startDate} - {ed.endDate}
+                  </span>
+                  <span className="text-sm">Grade: {ed.grade}</span>
+                </div>
+              ))}
           </div>
         </div>
-        <div className="my-4 p-4 border border-solid border-slate-300">
+        <div className="my-4 p-4 relative border border-solid border-slate-300">
+          <button
+            onClick={() => handleUpdateContent("Skills")}
+            className="absolute top-4 right-5 bg-white rounded-full p-2"
+          >
+            <FaPen />
+          </button>
           <span className="mb-2 text-xl leading-normal text-black opacity-90 font-semibold">
             Skills
           </span>
@@ -351,7 +361,13 @@ const page = () => {
             Show all skills
           </Link>
         </div>
-        <div className="my-4 p-4 border border-solid border-slate-300">
+        <div className="my-4 p-4 relative border border-solid border-slate-300">
+          <button
+            onClick={() => handleUpdateContent("Languages")}
+            className="absolute top-4 right-5 bg-white rounded-full p-2"
+          >
+            <FaPen />
+          </button>
           <span className="mb-2 text-xl leading-normal text-black opacity-90 font-semibold">
             Languages
           </span>
@@ -360,6 +376,11 @@ const page = () => {
           </div>
         </div>
       </div>
+      <UpdateProfilePopup
+        show={showProfilePop}
+        setShowProfilePop={setShowProfilePop}
+        type={typeUpdate}
+      />
       <div className="w-[30%] p-4 mt-10">
         {users.map((user) => (
           <div

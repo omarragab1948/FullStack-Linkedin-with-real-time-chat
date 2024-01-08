@@ -28,7 +28,28 @@ const postSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
+const educationSchema = new mongoose.Schema({
+  institution: {
+    type: String,
+    required: true,
+  },
+  department: {
+    type: String,
+    required: true,
+  },
+  startDate: {
+    type: String,
+    required: true,
+  },
+  endDate: {
+    type: String,
+    required: true,
+  },
+  grade: {
+    type: String,
+    required: true,
+  },
+});
 const userSchema = new mongoose.Schema({
   backgroundImage: {
     type: String,
@@ -60,6 +81,7 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   posts: [postSchema],
+  education: [educationSchema],
 });
 
 const User = models.User || mongoose.model("User", userSchema);
