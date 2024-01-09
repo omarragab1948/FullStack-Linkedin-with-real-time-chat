@@ -224,7 +224,8 @@ const Main = () => {
       <PostModel
         show={show}
         setShow={setShow}
-        handlePostAdded={handlePostAdded}
+        // handlePostAdded={handlePostAdded}
+        setPosts={setPosts}
       />
     </div>
   );
