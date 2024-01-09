@@ -137,12 +137,12 @@ const page = () => {
         <div className="relative border border-solid border-slate-300 rounded-t-xl h-96 pb-2">
           {/* Background Image */}
           <div className="w-full h-56 rounded-t-xl">
-            {user?.backgroundImage !== "" ? (
+            {user?.backgroundImage ? (
               <Image
                 src={user?.backgroundImage}
                 alt="user"
-                width={3500}
-                height={3500}
+                width={1500}
+                height={1500}
                 className="w-full h-full  rounded-t-xl"
               />
             ) : (
@@ -160,8 +160,8 @@ const page = () => {
                 src={user?.profileImage}
                 alt="user"
                 className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full"
-                width={1500}
-                height={1500}
+                width={2500}
+                height={2500}
               />
             ) : (
               <Image

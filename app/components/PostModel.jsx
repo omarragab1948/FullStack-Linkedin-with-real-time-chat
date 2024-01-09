@@ -62,7 +62,6 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
       const res = await addPost(formData);
       console.log(res);
       if (res.status === 201) {
-        handlePostAdded();
         dispatch(login(res.data));
         setSpinner(false);
         setShow(false);

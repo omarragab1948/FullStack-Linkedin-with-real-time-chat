@@ -2,12 +2,16 @@
 import React, { useState } from "react";
 import logo from "/public/images/login-logo.svg";
 import Link from "next/link";
-import { signUp } from "../services/apiHandler";
+import { signIn, signUp } from "../services/apiHandler";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
-
+import { login } from "../rtk/authSlice";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth, googleProvider } from "../utils/firebase";
+import { useDispatch } from "react-redux";
 const SignUp = () => {
+  const dispatch = useDispatch();
   const [userInfo, setUserInfo] = useState({
     firstName: "",
     lastName: "",
@@ -77,6 +81,37 @@ const SignUp = () => {
       console.log(res);
     } catch (e) {}
   };
+  const handleGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then(async (result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+        const userData = {
+          firstName: user.displayName,
+          email: user.email,
+          profileImage: user.photoURL,
+          google: true,
+        };
+        if (user) {
+          const res = await signUp(userData);
+          console.log(res.data);
+          if (res.status === 400 || res.status === 201) {
+            const res = await signIn(userData);
+            if (res.status === 200) {
+              dispatch(login(res.data));
+              router.push("/home");
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.customData.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+      });
+  };
   return (
     <div className="pt-8 d-flex flex-column justify-content-center h-screen ">
       <ToastContainer />
@@ -131,7 +166,10 @@ const SignUp = () => {
             Sign Up
           </button>
         </form>
-        <button className="bg-slate-200 flex font-bold my-3 border-1 border-solid border-gray-400 rounded-full mx-auto duration-300 w-full hover:bg-slate-300 text-gray-600 hover:text-black  h-10 items-center justify-center">
+        <button
+          onClick={handleGoogle}
+          className="bg-slate-200 flex font-bold my-3 border-1 border-solid border-gray-400 rounded-full mx-auto duration-300 w-full hover:bg-slate-300 text-gray-600 hover:text-black  h-10 items-center justify-center"
+        >
           <img src="/images/google.svg" className="mr-2" alt="" />
           Sign in with Google
         </button>

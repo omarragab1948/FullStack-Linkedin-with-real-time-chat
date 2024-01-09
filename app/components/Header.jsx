@@ -15,6 +15,7 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+
   const user = useSelector((state) => state.auth.user?.user);
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu

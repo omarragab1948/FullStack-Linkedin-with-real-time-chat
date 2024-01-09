@@ -13,13 +13,17 @@ const LeftSide = () => {
       <div className="text-center   overflow-hidden  rounded border-none">
         <Link href="/home/profile">
           <div>
-            <Image
-              src={userr?.backgroundImage}
-              alt="user"
-              width={1500}
-              height={1500}
-              className="rounded-t-xl w-full h-32 mx-auto"
-            />
+            {userr?.backgroundImage ? (
+              <Image
+                src={userr?.backgroundImage}
+                alt="user"
+                width={1500}
+                height={1500}
+                className="rounded-t-xl w-full h-32 mx-auto"
+              />
+            ) : (
+              <div className="w-full h-32 bg-gradient-to-b from-slate-400 to-slate-50 rounded-t-xl"></div>
+            )}
           </div>
           <div className="relative bottom-10  rounded-full ">
             <Image
