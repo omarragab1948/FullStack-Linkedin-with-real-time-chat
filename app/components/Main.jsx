@@ -26,7 +26,6 @@ const Main = () => {
   };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    // Do something with the date (format it, etc.)
     // For example:
     const formattedDate = date.toLocaleString(); // Adjust as per your requirement
     return formattedDate;
