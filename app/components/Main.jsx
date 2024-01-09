@@ -17,6 +17,7 @@ const Main = () => {
     setSpinner(true);
     try {
       const res = await getAllPosts();
+
       if (res.status === 200) {
         setPosts(res.data);
         console.log(res);
@@ -36,7 +37,7 @@ const Main = () => {
     getData();
   };
   useEffect(() => {
-    getData();
+    handlePostAdded();
   }, [show]);
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
