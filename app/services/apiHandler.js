@@ -8,6 +8,14 @@ export const signIn = async (user) => {
     throw e;
   }
 };
+export const signOut = async () => {
+  try {
+    const res = await axios.post("/api/signout");
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
 export const signUp = async (user) => {
   try {
     const res = await axios.post("/api/signup", user);

@@ -62,7 +62,7 @@ const page = () => {
   return (
     <div className="flex-col flex justify-center md:flex-row mt-10 px-10 md:pl-[140px] md:pr-[170px]">
       <div className="w-full md:w-[70%] mt-10 mr-4 ">
-        <div className="text-center w-full h-96 pb-2 relative rounded-t-xl border border-solid border-slate-300">
+        {/* <div className="text-center w-full h-96 pb-2 relative rounded-t-xl border border-solid border-slate-300">
           <button
             onClick={() => handleUpdateImage("Background photo")}
             className="absolute top-4 right-5 bg-white rounded-full p-2"
@@ -110,28 +110,108 @@ const page = () => {
             updateImage={updateImage}
             typeImage={typeImage}
           />
-          <div className="font-semibold flex relative top-11 left-14 text-xl leading-normal text-black  opacity-90">
-            <span>
-              {user?.firstName} {user?.lastName}
-            </span>
+          <div className="flex flex-col justify-start items-start absolute top-11">
+            <div className="font-semibold flex absolute top-11 left-14 text-xl leading-normal text-black  opacity-90">
+              <span>
+                {user?.firstName} {user?.lastName}
+              </span>
+            </div>
+
+            <div className="font-normal flex absolute top-11 left-14 text-lg leading-snug mt-1">
+              Front-End
+            </div>
+            <div className="flex top-11 absolute left-14">
+              <span className="opacity-70">Alexandria</span>
+              <span className="mx-3 opacity-70">Egypt</span>
+              <button href="" className="text-blue-600 font-semibold">
+                Contact info
+              </button>
+            </div>
+            <div className="flex top-11  absolute left-14">
+              <button href="" className="text-blue-600 font-semibold">
+                {user?.connections || 0} Connections
+              </button>
+            </div>
+          </div>
+        </div> */}
+        <div className="relative border border-solid border-slate-300 rounded-t-xl h-96 pb-2">
+          {/* Background Image */}
+          <div className="w-full h-56 rounded-t-xl">
+            {user?.backgroundImage !== "" ? (
+              <Image
+                src={user?.backgroundImage}
+                alt="user"
+                width={3500}
+                height={3500}
+                className="w-full h-full  rounded-t-xl"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-b from-slate-400 to-slate-50 rounded-t-xl"></div>
+            )}
           </div>
 
-          <div className="font-normal flex relative top-11 left-14 text-lg leading-snug mt-1">
-            Front-End
+          {/* Profile Image */}
+          <button
+            onClick={() => handleUpdateImage("Profile photo")}
+            className="absolute bottom-28 left-10 rounded-full overflow-hidden"
+          >
+            {user?.profileImage !== "" ? (
+              <Image
+                src={user?.profileImage}
+                alt="user"
+                className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full"
+                width={1500}
+                height={1500}
+              />
+            ) : (
+              <Image
+                src={userImage}
+                alt="user"
+                className="w-24 h-24 object-cover rounded-full"
+                width={1500}
+                height={1500}
+              />
+            )}
+          </button>
+
+          {/* Edit Background Photo Button */}
+          <button
+            onClick={() => handleUpdateImage("Background photo")}
+            className="absolute top-2 right-2 bg-white rounded-full p-2"
+          >
+            <FaPen />
+          </button>
+
+          {/* User Information */}
+          <div className="absolute bottom-2 left-8 ">
+            <div className="font-semibold text-xl leading-normal">
+              {user?.firstName} {user?.lastName}
+            </div>
+            <div className="font-normal text-lg leading-snug mt-1">
+              Front-End
+            </div>
+            <div className="flex items-center">
+              <span className="opacity-70">Alexandria</span>
+              <span className="mx-3 opacity-70">Egypt</span>
+              <a href="#" className="text-blue-600 font-semibold">
+                Contact info
+              </a>
+            </div>
+            <div>
+              <a href="#" className="text-blue-600 font-semibold">
+                {user?.connections || 0} Connections
+              </a>
+            </div>
           </div>
-          <div className="flex top-11 relative left-14">
-            <span className="opacity-70">Alexandria</span>
-            <span className="mx-3 opacity-70">Egypt</span>
-            <button href="" className="text-blue-600 font-semibold">
-              Contact info
-            </button>
-          </div>
-          <div className="flex top-11  relative left-14">
-            <button href="" className="text-blue-600 font-semibold">
-              {user?.connections || 0} Connections
-            </button>
-          </div>
+
+          {/* Update Image Popup */}
+          <UpdateImagePopup
+            setUpdateImage={setUpdateImage}
+            updateImage={updateImage}
+            typeImage={typeImage}
+          />
         </div>
+
         <div className="my-4 p-4 border border-solid border-slate-300">
           <Link href="/home/network" className="flex items-center">
             <svg
@@ -297,12 +377,14 @@ const page = () => {
               </span>
             ))}
           </div>
-          <button
-            onClick={() => handleUpdateContent("Skills")}
-            className="w-full text-lg flex justify-center font-semibold opacity-70 mt-3"
-          >
-            Show all skills
-          </button>
+          {user?.skills?.length > 0 && (
+            <button
+              onClick={() => handleUpdateContent("Skills")}
+              className="w-full text-lg flex justify-center font-semibold opacity-70 mt-3"
+            >
+              Show all skills
+            </button>
+          )}
         </div>
         <div className="my-4 p-4 relative border border-solid border-slate-300">
           <button

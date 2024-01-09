@@ -47,12 +47,12 @@ const page = () => {
   };
 
   return (
-    <div className="mt-20 flex  justify-center items-start w-full">
+    <div className="mt-20 flex flex-col md:flex-row  justify-center items-center md:items-start w-full">
       <Link href="/home/profile" className="my-4 flex items-center">
         <FaArrowLeftLong className="mr-2" /> Back to profile
       </Link>
 
-      <div className="my-4 ml-3 p-4  flex flex-col border border-solid w-1/2 border-slate-300">
+      <div className="my-4 ml-3 p-4  flex flex-col border border-solid w-11/12  sm:w-1/2 border-slate-300">
         <div className="flex items-center justify-between">
           <span className="mb-2 text-xl leading-normal text-black opacity-90 font-semibold">
             Education

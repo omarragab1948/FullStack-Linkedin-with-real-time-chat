@@ -134,7 +134,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
     <>
       {show && (
         <div className=" fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-          <div className="menu-container bg-slate-200  flex-col justify-between rounded-lg overflow-hidden w-1/2 ">
+          <div className="menu-container bg-slate-200  flex-col justify-between rounded-lg overflow-hidden w-11/12 sm:w-2/3 md:w-1/2 ">
             <div className="py-2 px-3 flex w-full  justify-start relative items-center">
               <span className="text-xl font-semibold">{type} </span>
               <button
@@ -190,7 +190,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
             )}
             {type === "Skills" && (
               <div className="p-4 flex flex-col items-end">
-                <div className="h-96 overflow-auto w-full mb-6">
+                <div className="h-48 overflow-auto w-full mb-6">
                   {user?.skills?.map((skill, index) => (
                     <div
                       key={index}
@@ -222,7 +222,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
                   />
                   <div className="flex">
                     <div
-                      className={`border-4 my-2 border-solid mr-4 ${
+                      className={`border-4 mt-3 border-solid mr-4 ${
                         spinner ? "opacity-1" : "opacity-0"
                       } border-gray-400 border-t-blue-500  rounded-full w-8 h-8 animate-spin`}
                     ></div>
@@ -243,7 +243,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
             )}
             {type === "Languages" && (
               <div className="p-4 flex flex-col items-end">
-                <div className="h-96 overflow-auto w-full mb-6">
+                <div className="h-48 overflow-auto w-full mb-6">
                   {user?.languages?.map((language, index) => (
                     <div
                       key={index}
@@ -273,9 +273,9 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
                     placeholder="add a language"
                     className="w-full p-2 mb-3 rounded-md border border-solid border-blue-500 focus:outline-none focus:border-blue-600"
                   />
-                  <div className="flex items-center">
+                  <div className="flex items-center ">
                     <div
-                      className={`border-4 my-2 border-solid mr-4 ${
+                      className={`border-4 mt-3 border-solid mr-4 ${
                         spinner ? "opacity-1" : "opacity-0"
                       } border-gray-400 border-t-blue-500  rounded-full w-8 h-8 animate-spin`}
                     ></div>

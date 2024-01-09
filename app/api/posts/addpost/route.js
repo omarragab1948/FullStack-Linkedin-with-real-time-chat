@@ -77,7 +77,7 @@ export const POST = async (request) => {
         lastName: existUser.lastName,
         content,
         image: downloadURL,
-        autherImage: downloadURL,
+        autherImage: existUser.profileImage,
         autherTitle: "Front End",
       };
 

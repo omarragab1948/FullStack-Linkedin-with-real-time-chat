@@ -7,10 +7,12 @@ import Image from "next/image";
 import PostModel from "./PostModel";
 import { useEffect, useState } from "react";
 import { getAllPosts } from "../services/apiHandler";
+import { useSelector } from "react-redux";
 const Main = () => {
   const [show, setShow] = useState(false);
   const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
+  const user = useSelector((state) => state.auth.user?.user);
   const getData = async () => {
     setSpinner(true);
     try {
@@ -40,10 +42,12 @@ const Main = () => {
       <div className=" border border-solid border-slate-300 rounded pt-2">
         <div className=" px-2 my-2 ">
           <div className="flex my-3">
-            <img
-              src="/images/user.svg"
+            <Image
+              src={user?.profileImage}
               alt="user"
-              className="rounded-full w-14 mr-2"
+              className="rounded-full w-14 h-14 mr-2"
+              width={1500}
+              height={1500}
             />
 
             <button
@@ -144,7 +148,7 @@ const Main = () => {
                     alt="article"
                     width={1000}
                     height={1000}
-                    className="mx-auto"
+                    className="mx-auto h-96"
                   />
                 </div>
               )}

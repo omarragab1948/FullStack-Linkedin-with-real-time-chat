@@ -79,7 +79,7 @@ const EducationForm = ({ show, update, setShow, id }) => {
   };
   return (
     <div className="container mx-auto mt-2">
-      <form className="max-w-md mx-auto bg-white p-2 shadow-md">
+      <form className="max-w-md mx-auto bg-white p-2 ">
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -172,9 +172,9 @@ const EducationForm = ({ show, update, setShow, id }) => {
       </form>
       <div className="w-full justify-end flex">
         <div
-          className={`border-4 my-2 border-solid mr-4 ${
+          className={`border-4 mt-3 border-solid mr-4 ${
             spinner ? "opacity-1" : "opacity-0"
-          } border-gray-400 border-t-blue-500  rounded-full w-10 h-10 animate-spin`}
+          } border-gray-400 border-t-blue-500  rounded-full w-8 h-8 animate-spin`}
         ></div>
         {update === "add" ? (
           <button

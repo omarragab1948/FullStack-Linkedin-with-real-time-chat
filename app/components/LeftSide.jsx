@@ -4,41 +4,41 @@ import { BsFillBookmarkFill } from "react-icons/bs";
 import user from "@/public/images/user.svg";
 import share from "@/public/images/shared-image.jpg";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 const LeftSide = () => {
-  const userr = useSelector((state) => state.auth.user);
-  console.log(userr);
+  const userr = useSelector((state) => state.auth.user?.user);
 
   return (
     <div className="left relative md:sticky top-24 h-fit w-full  md:w-1/3 lg:w-1/4 mb-10 md:mr-6 border border-slate-300 border-solid rounded-t-xl">
       <div className="text-center   overflow-hidden  rounded border-none">
-        <div>
+        <Link href="/home/profile">
           <div>
             <Image
-              src={share}
+              src={userr?.backgroundImage}
               alt="user"
-              width={1000}
-              height={1000}
-              className="rounded-t-xl w-full h-24 mx-auto"
+              width={1500}
+              height={1500}
+              className="rounded-t-xl w-full h-32 mx-auto"
             />
           </div>
-
           <div className="relative bottom-10  rounded-full ">
             <Image
-              src={user}
+              src={userr?.profileImage}
               alt="user"
-              className="rounded-full w-20 mx-auto"
+              className="rounded-full w-20 h-20 mx-auto"
+              width={1500}
+              height={1500}
             />
           </div>
           <div className="font-semibold relative bottom-6 text-base leading-normal text-black  opacity-90">
             <span>
-              {userr.firstName} {userr.lastName}
+              {userr?.firstName} {userr?.lastName}
             </span>
           </div>
-
           <div className="font-normal relative bottom-6 text-md leading-snug mt-1">
             Front-End
           </div>
-        </div>
+        </Link>
       </div>
       <div className="px-3">
         <div>

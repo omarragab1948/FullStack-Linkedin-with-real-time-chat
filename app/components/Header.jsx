@@ -3,16 +3,19 @@ import Link from "next/link";
 import { VscTriangleDown } from "react-icons/vsc";
 import { IoMdSearch } from "react-icons/io";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { usePathname } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { usePathname, useRouter } from "next/navigation";
 import "../globals.css";
+import Image from "next/image";
+import { signOut } from "../services/apiHandler";
+import { logout } from "../rtk/authSlice";
 const Header = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  console.log(currentPath);
   const [showMenu, setShowMenu] = useState(false);
-  const user = useSelector((state) => state.auth.user);
-  console.log(user);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const user = useSelector((state) => state.auth.user?.user);
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (showMenu && e.target.closest(".menu-container") === null) {
@@ -71,8 +74,20 @@ const Header = () => {
       timestamp: "1/5/2024, 12:02:00 PM",
     },
   ];
+  const handleSignOut = async () => {
+    try {
+      const res = await signOut();
+      if (res.status === 200) {
+        router.push("/");
+
+        dispatch(logout());
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
   return (
-    <header className="bg-white bg-main-dark-bg fixed top-0 w-[98%] lg:px-24 z-50">
+    <header className="bg-white bg-main-dark-bg fixed top-0 w-full lg:px-24 z-50">
       <div className=" p-2 m-auto flex justify-start px-10 md:justify-between items-center">
         <div className="flex mr-2 w-full sm:w-full md:w-fit justify-center items-center">
           <div>
@@ -103,7 +118,7 @@ const Header = () => {
           </div>
         </div>
         <nav className="lg:w-2/3 py-2 md:w-3/5 flex fixed sm:relative justify-center bottom-0 left-0 w-[98%] md:justify-end z-50 bg-white md:top-0">
-          <ul className="flex items-center w-[98%]  justify-around">
+          <ul className="flex items-center w-full justify-around">
             <Link
               href="/home"
               className={`${
@@ -133,7 +148,7 @@ const Header = () => {
               } text-black relative hover:opacity-100 flex flex-col items-center justify-center opacity-70 duration-300`}
             >
               {netwrok && (
-                <span className="text-white text-xs w-5 h-5 rounded-full flex justify-center absolute top-[-2px] right-5 p-1 items-center bg-[#cb112d]">
+                <span className="text-white text-xs w-5 h-5 rounded-full flex justify-center absolute top-[-2px] left-[38px] sm:left-4 md:left-[45px] p-1 items-center bg-[#cb112d]">
                   {netwrok.length}
                 </span>
               )}
@@ -182,7 +197,7 @@ const Header = () => {
               } text-black relative hover:opacity-100 flex flex-col items-center justify-center opacity-70  duration-300`}
             >
               {messages && (
-                <span className="text-white text-xs w-5 h-5 rounded-full flex justify-center absolute top-[-2px] right-4 p-1 items-center bg-[#cb112d]">
+                <span className="text-white text-xs w-5 h-5 rounded-full flex justify-center absolute top-[-2px] left-[38px] sm:left-4 md:left-[45px] p-1 items-center bg-[#cb112d]">
                   {messages.length}
                 </span>
               )}
@@ -209,7 +224,7 @@ const Header = () => {
               } text-black relative hover:opacity-100  flex flex-col items-center justify-center opacity-70  duration-300`}
             >
               {notifications && (
-                <span className="text-white text-xs w-5 h-5 rounded-full flex justify-center absolute top-[-2px] right-6 p-1 items-center bg-[#cb112d]">
+                <span className="text-white text-xs w-5 h-5 rounded-full flex justify-center absolute top-[-2px] left-[38px] sm:left-4 md:left-[45px] p-1 items-center bg-[#cb112d]">
                   {notifications.length}
                 </span>
               )}
@@ -234,10 +249,12 @@ const Header = () => {
               className=" relative cursor-pointer"
             >
               <div className="flex flex-col justify-center items-center">
-                <img
-                  src="/images/user.svg"
+                <Image
+                  src={user?.profileImage}
                   alt=""
-                  className="rounded-full w-6 mx-auto"
+                  className="rounded-full w-6 h-6 mx-auto"
+                  width={1500}
+                  height={1500}
                 />
 
                 <span className="sm:hidden md:flex text-sm md:text-base text-black items-center  opacity-70 hover:opacity-100 ">
@@ -246,13 +263,15 @@ const Header = () => {
                 </span>
               </div>
               {showMenu && (
-                <div className="menu-container absolute shadow-white right-0 top-12 bg-white border border-gray-300 rounded-md shadow-lg w-64 p-3">
+                <div className="menu-container absolute shadow-white right-0 bottom-16 sm:top-14 h-fit bg-white border border-gray-300 rounded-md shadow-lg w-64 p-3">
                   <div className="flex justify-start items-center mb-4">
                     <div>
-                      <img
-                        src="/images/user.svg"
+                      <Image
+                        src={user?.profileImage}
                         alt=""
-                        className="rounded-full w-10 mx-auto"
+                        className="rounded-full w-10 h-10 mx-auto"
+                        width={1500}
+                        height={1500}
                       />
                     </div>
                     <div className="flex flex-col ml-2">
@@ -287,11 +306,12 @@ const Header = () => {
                         Activity & Posts
                       </Link>
                     </li>
-                    <button className="hover:underline">Logout</button>
+                    <button onClick={handleSignOut} className="hover:underline">
+                      Logout
+                    </button>
                   </div>
                 </div>
               )}
-              {/* <button className={` p-2`}>Sign Out</button> */}
             </button>
           </ul>
         </nav>

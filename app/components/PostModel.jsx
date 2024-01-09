@@ -31,7 +31,7 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
   const [srcImage, setSrcImage] = useState(null);
   const [imageShow, setImageShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
-  const user = useSelector((state) => state.auth.user.user);
+  const user = useSelector((state) => state.auth.user?.user);
   function handleImage(e) {
     const file = e.target.files[0];
     setSrcImage(file);
