@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
 
-const PostModel = ({ show, setShow }) => {
+const PostModel = ({ show, setShow, handlePostAdded }) => {
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (show && e.target.closest(".menu-container") === null) {
