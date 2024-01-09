@@ -1,8 +1,10 @@
-"use client";
 import { createSlice } from "@reduxjs/toolkit";
 
 // Load user from local storage if available
-const storedUser = JSON.parse(localStorage.getItem("user"));
+const storedUser =
+  typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("user"))
+    : null;
 
 const initialState = {
   user: storedUser || null,
