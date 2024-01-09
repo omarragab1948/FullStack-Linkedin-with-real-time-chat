@@ -17,7 +17,7 @@ const Main = () => {
     setSpinner(true);
     try {
       const res = await getAllPosts();
-      if (res.status === 200) {
+      if (res.status === 201) {
         setPosts(res.data);
         console.log(res);
         setSpinner(false);
