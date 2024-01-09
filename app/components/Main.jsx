@@ -17,9 +17,11 @@ const Main = () => {
     setSpinner(true);
     try {
       const res = await getAllPosts();
-      setPosts(res.data);
-      console.log(res);
-      setSpinner(false);
+      if (res.status === 200) {
+        setPosts(res.data);
+        console.log(res);
+        setSpinner(false);
+      }
     } catch (err) {
       throw err;
     }
