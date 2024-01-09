@@ -35,7 +35,7 @@ const Main = () => {
   };
   useEffect(() => {
     getData();
-  }, []);
+  }, [show]);
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
       <div className=" border border-solid border-slate-300 rounded pt-2">
