@@ -12,15 +12,11 @@ const Main = () => {
   const [show, setShow] = useState(false);
   const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
-  const [refetch, setRefetch] = useState(false);
   const user = useSelector((state) => state.auth.user?.user);
-
-  console.log(refetch);
   const getData = async () => {
     setSpinner(true);
     try {
       const res = await getAllPosts();
-
       if (res.status === 200) {
         setPosts(res.data);
         console.log(res);
@@ -41,7 +37,7 @@ const Main = () => {
   };
   useEffect(() => {
     getData();
-  }, [refetch]);
+  }, [show]);
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
       <div className=" border border-solid border-slate-300 rounded pt-2">
@@ -227,9 +223,7 @@ const Main = () => {
       <PostModel
         show={show}
         setShow={setShow}
-        setPosts={setPosts}
-        posts={posts}
-        setRefetch={setRefetch}
+        handlePostAdded={handlePostAdded}
       />
     </div>
   );

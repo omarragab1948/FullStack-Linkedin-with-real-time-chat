@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
 
-const PostModel = ({ show, setShow, setPosts, posts, setRefetch }) => {
+const PostModel = ({ show, setShow }) => {
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (show && e.target.closest(".menu-container") === null) {
@@ -32,8 +32,6 @@ const PostModel = ({ show, setShow, setPosts, posts, setRefetch }) => {
   const [imageShow, setImageShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
   const user = useSelector((state) => state.auth.user?.user);
-
-  console.log(posts);
   function handleImage(e) {
     const file = e.target.files[0];
     setSrcImage(file);
@@ -65,8 +63,7 @@ const PostModel = ({ show, setShow, setPosts, posts, setRefetch }) => {
       console.log(res);
       if (res.status === 201) {
         dispatch(login(res.data));
-        setPosts(res.posts);
-        setRefetch(true);
+        handlePostAdded();
         setSpinner(false);
         setShow(false);
         reset();
