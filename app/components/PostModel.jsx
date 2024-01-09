@@ -63,6 +63,7 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
       console.log(res);
       if (res.status === 201) {
         dispatch(login(res.data));
+        handlePostAdded();
         setSpinner(false);
         setShow(false);
         reset();
