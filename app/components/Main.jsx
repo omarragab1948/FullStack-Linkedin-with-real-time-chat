@@ -13,32 +13,33 @@ const Main = () => {
   const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.auth.user?.user);
-  const getData = async () => {
-    setSpinner(true);
-    try {
-      const res = await getAllPosts();
+  console.log(posts);
+  // const getData = async () => {
+  //   setSpinner(true);
+  //   try {
+  //     const res = await getAllPosts();
 
-      if (res.status === 200) {
-        setPosts(res.data);
-        console.log(res);
-        setSpinner(false);
-      }
-    } catch (err) {
-      throw err;
-    }
-  };
+  //     if (res.status === 200) {
+  //       setPosts(res.data);
+  //       console.log(res);
+  //       setSpinner(false);
+  //     }
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     // For example:
     const formattedDate = date.toLocaleString(); // Adjust as per your requirement
     return formattedDate;
   };
-  const handlePostAdded = () => {
-    getData();
-  };
-  useEffect(() => {
-    getData();
-  }, [user]);
+  // const handlePostAdded = () => {
+  //   getData();
+  // };
+  // useEffect(() => {
+  //   getData();
+  // }, [user]);
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
       <div className=" border border-solid border-slate-300 rounded pt-2">
@@ -226,6 +227,7 @@ const Main = () => {
         setShow={setShow}
         // handlePostAdded={handlePostAdded}
         setPosts={setPosts}
+        posts={posts}
       />
     </div>
   );
