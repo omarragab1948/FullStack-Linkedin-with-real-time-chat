@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
 
-const PostModel = ({ show, setShow, setPosts, posts }) => {
+const PostModel = ({ show, setShow, setPosts, posts, setRefetch }) => {
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (show && e.target.closest(".menu-container") === null) {
@@ -66,6 +66,7 @@ const PostModel = ({ show, setShow, setPosts, posts }) => {
       if (res.status === 201) {
         dispatch(login(res.data));
         setPosts(res.posts);
+        setRefetch(true);
         setSpinner(false);
         setShow(false);
         reset();
