@@ -62,6 +62,9 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
       const res = await addPost(formData);
       console.log(res);
       if (res.status === 201) {
+        console.log(res.posts);
+        typeof window !== "undefined" &&
+          localStorage.setItem("posts", JSON.stringify(res.posts));
         dispatch(login(res.data));
         handlePostAdded();
         setSpinner(false);
