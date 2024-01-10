@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import "../globals.css";
 import Image from "next/image";
-import { signOut } from "../services/apiHandler";
+import { getUser, signOut } from "../services/apiHandler";
 import { login, logout } from "../rtk/authSlice";
 const Header = () => {
   const pathname = usePathname();
@@ -15,13 +15,13 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-
   const user = useSelector((state) => state.auth.user?.user);
-  const local = typeof window !== "undefined" && localStorage.getItem("user");
 
+  const local = typeof window !== "undefined" && localStorage.getItem("user");
   useEffect(() => {
     dispatch(login(JSON.parse(local)));
   }, []);
+
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (showMenu && e.target.closest(".menu-container") === null) {

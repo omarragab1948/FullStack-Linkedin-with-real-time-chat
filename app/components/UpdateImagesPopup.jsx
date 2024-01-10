@@ -162,8 +162,8 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
                   <Image
                     src={
                       typeImage === "Background photo"
-                        ? user.backgroundImage || userImage
-                        : user.profileImage || userImage
+                        ? user?.backgroundImage || userImage
+                        : user?.profileImage || userImage
                     }
                     width={1500}
                     height={1500}

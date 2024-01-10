@@ -61,6 +61,15 @@ export const getAllUsers = async () => {
     throw e;
   }
 };
+export const getUser = async () => {
+  try {
+    const res = await axios.get("/api/users/getuser");
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
 export const updateUserImages = async (image) => {
   try {
     const token = JSON.parse(localStorage.getItem("user")).token;
