@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // Load user from local storage if available
-const storedUser =
-  typeof window !== "undefined"
-    ? JSON.parse(localStorage.getItem("user"))
-    : null;
+// const storedUser =
+//   typeof window !== "undefined"
+//     ? JSON.parse(localStorage.getItem("user"))
+//     : null;
 
 const initialState = {
-  user: storedUser || null,
+  user: null,
 };
 
 const authSlice = createSlice({
@@ -17,12 +17,12 @@ const authSlice = createSlice({
     login: (state, action) => {
       state.user = action.payload;
       // Save user to local storage
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      // localStorage.setItem("user", JSON.stringify(action.payload));
     },
     logout: (state) => {
       state.user = null;
       // Remove user from local storage
-      localStorage.removeItem("user");
+      // localStorage.removeItem("user");
     },
   },
 });
