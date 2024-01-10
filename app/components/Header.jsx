@@ -17,7 +17,7 @@ const Header = () => {
   const router = useRouter();
 
   const user = useSelector((state) => state.auth.user?.user);
-  const local = localStorage.getItem("user");
+  const local = typeof window !== "undefined" && localStorage.getItem("user");
 
   useEffect(() => {
     dispatch(login(JSON.parse(local)));
