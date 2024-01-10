@@ -12,6 +12,8 @@ import { auth, googleProvider } from "../utils/firebase";
 import { useDispatch } from "react-redux";
 const SignUp = () => {
   const dispatch = useDispatch();
+  const [spinner, setSpinner] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     firstName: "",
     lastName: "",
@@ -35,6 +37,7 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setSpinner(true);
 
     // Clear previous errors
     setEr({
@@ -75,13 +78,17 @@ const SignUp = () => {
       const res = await signUp(userInfo);
       if (res.status === 201) {
         router.push("/signin");
+        setSpinner(false);
       } else {
         toast.error(res.error);
+        setSpinner(false);
       }
       console.log(res);
     } catch (e) {}
   };
   const handleGoogle = () => {
+    setSpinner(true);
+
     signInWithPopup(auth, googleProvider)
       .then(async (result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -94,20 +101,20 @@ const SignUp = () => {
           google: true,
         };
         if (user) {
-          const res = await signUp(userData);
-          console.log(res.data);
-          if (res.status === 400 || res.status === 201) {
-            const res = await signIn(userData);
-            if (res.status === 200) {
-              dispatch(login(res.data));
-              typeof window !== "undefined" &&
-                localStorage.setItem("user", JSON.stringify(res.data));
-              router.push("/home");
-            }
+          const res = await signIn(userData);
+          if (res.status === 200) {
+            dispatch(login(res.data));
+            setSpinner(false);
+
+            typeof window !== "undefined" &&
+              localStorage.setItem("user", JSON.stringify(res.data));
+            router.push("/home");
           }
         }
       })
       .catch((error) => {
+        setSpinner(false);
+
         const errorCode = error.code;
         const errorMessage = error.message;
         const email = error.customData.email;
@@ -175,7 +182,12 @@ const SignUp = () => {
           <img src="/images/google.svg" className="mr-2" alt="" />
           Sign in with Google
         </button>
-        <div className="mt-4 text-center">
+        <div
+          className={`border-4  border-solid mx-auto  ${
+            spinner ? "opacity-1" : "opacity-0"
+          } border-gray-400 border-t-blue-500 rounded-full w-8 h-8 animate-spin`}
+        ></div>
+        <div className="mt-3 text-center">
           <p className="text-gray-600">
             Already have an account?
             <Link href="/signin" className="text-blue-500">

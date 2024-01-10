@@ -74,7 +74,7 @@ export const POST = async (request) => {
         status: 400,
       });
     }
-
+    console.log(email, password, google);
     connectToMongoDB();
 
     let existedUser;

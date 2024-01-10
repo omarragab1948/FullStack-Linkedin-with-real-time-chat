@@ -62,11 +62,11 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
       const res = await addPost(formData);
       console.log(res);
       if (res.status === 201) {
-        console.log(res.posts);
-        typeof window !== "undefined" &&
-          localStorage.setItem("posts", JSON.stringify(res.posts));
-        dispatch(login(res.data));
         handlePostAdded();
+        // console.log(res.posts);
+        // typeof window !== "undefined" &&
+        //   localStorage.setItem("posts", JSON.stringify(res.posts));
+        dispatch(login(res.data));
         setSpinner(false);
         setShow(false);
         reset();
@@ -78,7 +78,7 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
     <>
       {show && (
         <div className=" fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-          <div className="menu-container bg-white flex flex-col justify-between rounded-lg overflow-hidden w-1/2 h-4/5">
+          <div className="menu-container bg-white flex flex-col justify-between rounded-lg overflow-hidden w-11/12 md:w-1/2 h-3/5 md:h-4/5">
             <div className="py-2 px-3 flex w-full flex-col justify-between relative items-center">
               <div className="flex items-center w-full mt-2">
                 {user && user?.profileImage ? (

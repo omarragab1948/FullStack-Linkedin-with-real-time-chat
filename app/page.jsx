@@ -6,11 +6,15 @@ import { signIn, signUp } from "./services/apiHandler";
 import { useDispatch } from "react-redux";
 import { login } from "./rtk/authSlice";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Home() {
+  const [spinner, setSpinner] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const handleGoogle = () => {
+    setSpinner(true);
+
     signInWithPopup(auth, googleProvider)
       .then(async (result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -24,20 +28,19 @@ export default function Home() {
           google: true,
         };
         if (user) {
-          const res = await signUp(userData);
-          console.log(res.data);
-          if (res.status === 400 || res.status === 201) {
-            const res = await signIn(userData);
-            if (res.status === 200) {
-              dispatch(login(res.data));
-              localStorage.setItem("user", JSON.stringify(res.data));
+          const res = await signIn(userData);
+          if (res.status === 200) {
+            dispatch(login(res.data));
+            localStorage.setItem("user", JSON.stringify(res.data));
+            setSpinner(false);
 
-              router.push("/home");
-            }
+            router.push("/home");
           }
         }
       })
       .catch((error) => {
+        setSpinner(false);
+
         const errorCode = error.code;
         const errorMessage = error.message;
         const email = error.customData.email;
@@ -45,7 +48,7 @@ export default function Home() {
       });
   };
   return (
-    <main className="">
+    <main className="relative">
       <nav className="container flex justify-between items-center mx-auto my-5 px-2 lg:px-0 xl:px-16">
         <Link href="/" className="w-24 sm:w-44 lg:ml-14">
           <img src="/images/login-logo.svg" alt="" />
@@ -88,6 +91,15 @@ export default function Home() {
           />
         </div>
       </section>
+      {spinner && (
+        <div className="w-full flex justify-center items-center h-full absolute top-0 left-0 bg-white">
+          <div
+            className={`border-4 my-2 border-solid mr-3 ${
+              spinner ? "opacity-1" : "opacity-0"
+            } border-gray-400 border-t-blue-500 rounded-full w-12 h-12 animate-spin`}
+          ></div>
+        </div>
+      )}
     </main>
   );
 }

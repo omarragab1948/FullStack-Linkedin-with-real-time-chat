@@ -33,12 +33,12 @@ const Main = () => {
     const formattedDate = date.toLocaleString();
     return formattedDate;
   };
-  const handlePostAdded = () => {
-    const local =
-      typeof window !== "undefined" && localStorage.getItem("posts");
+  // const handlePostAdded = () => {
+  //   // const local =
+  //   //   typeof window !== "undefined" && localStorage.getItem("posts");
 
-    setPosts(JSON.parse(local));
-  };
+  //   // setPosts(JSON.parse(local));
+  // };
 
   const local = typeof window !== "undefined" && localStorage.getItem("posts");
   useEffect(() => {
@@ -231,11 +231,7 @@ const Main = () => {
           </div>
         </div>
       )}
-      <PostModel
-        show={show}
-        setShow={setShow}
-        handlePostAdded={handlePostAdded}
-      />
+      <PostModel show={show} setShow={setShow} handlePostAdded={getData} />
     </div>
   );
 };
