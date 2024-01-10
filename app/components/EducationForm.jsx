@@ -49,6 +49,8 @@ const EducationForm = ({ show, update, setShow, id }) => {
       console.log(res.data);
       if (res.status === 200) {
         dispatch(login(res.data));
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(res.data));
         setSpinner(false);
         setShow(false);
       }
@@ -70,6 +72,8 @@ const EducationForm = ({ show, update, setShow, id }) => {
       console.log(res.data);
       if (res.status === 200) {
         dispatch(login(res.data));
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(res.data));
         setSpinner(false);
         setShow(false);
       }

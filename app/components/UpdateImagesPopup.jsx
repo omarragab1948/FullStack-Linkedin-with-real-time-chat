@@ -71,7 +71,8 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
         console.log(res);
         if (res.status === 200) {
           dispatch(login(res.data));
-
+          typeof window !== "undefined" &&
+            localStorage.setItem("user", JSON.stringify(res.data));
           setSpinner(false);
           setUpdateImage(false);
           reset();
@@ -85,7 +86,8 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
         console.log(res);
         if (res.status === 200) {
           dispatch(login(res.data));
-
+          typeof window !== "undefined" &&
+            localStorage.setItem("user", JSON.stringify(res.data));
           setSpinner(false);
           setUpdateImage(false);
           reset();
@@ -101,6 +103,8 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
         const res = await deleteProfileImage();
         if (res.status === 200) {
           dispatch(login(res.data));
+          typeof window !== "undefined" &&
+            localStorage.setItem("user", JSON.stringify(res.data));
           setSpinner(false);
           setUpdateImage(false);
           reset();
@@ -113,6 +117,8 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
         const res = await deleteBackgroundImage();
         if (res.status === 200) {
           dispatch(login(res.data));
+          typeof window !== "undefined" &&
+            localStorage.setItem("user", JSON.stringify(res.data));
           setSpinner(false);
           setUpdateImage(false);
           reset();

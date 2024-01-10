@@ -49,6 +49,8 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
       const res = await addAbout(formData);
       if (res.status === 200) {
         dispatch(login(res.data));
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(res.data));
         setSpinner(false);
         setShowProfilePop(false);
       }
@@ -64,6 +66,8 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
       const res = await addSkill(formData);
       if (res.status === 200) {
         dispatch(login(res.data));
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(res.data));
         setSpinner(false);
         setShowProfilePop(false);
       }
@@ -78,6 +82,8 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
       const res = await deleteAbout();
       if (res.status === 200) {
         dispatch(login(res.data));
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(res.data));
         setSpinner(false);
         setShowProfilePop(false);
         setEditorText("");
@@ -93,6 +99,8 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
       const res = await deleteSkill(id);
       if (res.status === 200) {
         dispatch(login(res.data));
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(res.data));
         setSpinner(false);
         setShowProfilePop(false);
         setEditorText("");
@@ -109,6 +117,8 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
       const res = await addLanguage(formData);
       if (res.status === 200) {
         dispatch(login(res.data));
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(res.data));
         setSpinner(false);
         setShowProfilePop(false);
       }
@@ -122,6 +132,8 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
       const res = await deleteLanguage(id);
       if (res.status === 200) {
         dispatch(login(res.data));
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(res.data));
         setSpinner(false);
         setShowProfilePop(false);
         setEditorText("");
