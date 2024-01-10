@@ -47,12 +47,12 @@ const Main = () => {
   //   getData();
   // }, []);
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts?.posts);
-  console.log(posts);
+  const posts = useSelector((state) => state.posts);
+  console.log(posts.status);
   useEffect(() => {
     dispatch(fetchPosts());
     // setPosts(postsData?.posts);
-  }, [dispatch]);
+  }, []);
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
       <div className=" border border-solid border-slate-300 rounded pt-2">
@@ -113,8 +113,8 @@ const Main = () => {
           } border-gray-400 border-t-blue-500 rounded-full w-8 h-8 animate-spin`}
         ></div>
       )}
-      {posts?.length > 0 ? (
-        posts.map((post, index) => (
+      {posts.status === "succeeded" ? (
+        posts?.posts?.map((post, index) => (
           <div
             key={index}
             className="mt-3  bg-main-dark-bg p-2  rounded border border-solid border-slate-300"
