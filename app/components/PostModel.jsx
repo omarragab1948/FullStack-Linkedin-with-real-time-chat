@@ -6,7 +6,7 @@ import { addPost } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
 import { fetchPosts } from "../rtk/postsSlice";
 
-const PostModel = ({ show, setShow, handlePostAdded }) => {
+const PostModel = ({ show, setShow }) => {
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (show && e.target.closest(".menu-container") === null) {
@@ -63,7 +63,6 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
       const res = await addPost(formData);
       console.log(res);
       if (res.status === 201) {
-        handlePostAdded();
         // console.log(res.posts);
         // typeof window !== "undefined" &&
         //   localStorage.setItem("posts", JSON.stringify(res.posts));

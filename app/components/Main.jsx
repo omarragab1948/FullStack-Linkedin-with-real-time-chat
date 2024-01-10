@@ -238,7 +238,7 @@ const Main = () => {
           </div>
         </div>
       )}
-      <PostModel show={show} setShow={setShow} handlePostAdded={getData} />
+      <PostModel show={show} setShow={setShow} />
     </div>
   );
 };
