@@ -58,7 +58,7 @@ export const POST = async (request) => {
       user,
       token: token.split(" ")[1],
     };
-    const posts = await Post.find();
+    const posts = await Post.find().sort({ _id: -1 });
     return Response.json({
       message: "Your article was added",
       data,
