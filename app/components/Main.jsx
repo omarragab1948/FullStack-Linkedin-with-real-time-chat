@@ -40,9 +40,9 @@ const Main = () => {
   //   // setPosts(JSON.parse(local));
   // };
 
-  const local = typeof window !== "undefined" && localStorage.getItem("posts");
+  // const local = typeof window !== "undefined" && localStorage.getItem("posts");
   useEffect(() => {
-    setPosts(JSON.parse(local));
+    // setPosts(JSON.parse(local));
     getData();
   }, []);
 
