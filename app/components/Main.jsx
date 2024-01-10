@@ -8,36 +8,18 @@ import PostModel from "./PostModel";
 import { useEffect, useState } from "react";
 import { getAllPosts } from "../services/apiHandler";
 import { useSelector } from "react-redux";
-const Main = () => {
+const Main = ({ posts, setRefetch }) => {
   const [show, setShow] = useState(false);
-  const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.auth.user?.user);
-  const getData = async () => {
-    setSpinner(true);
-    try {
-      const res = await getAllPosts();
-      if (res.status === 200) {
-        setPosts(res.data);
-        console.log(res);
-        setSpinner(false);
-      }
-    } catch (err) {
-      throw err;
-    }
-  };
+  console.log(posts);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     // For example:
     const formattedDate = date.toLocaleString(); // Adjust as per your requirement
     return formattedDate;
   };
-  const handlePostAdded = () => {
-    getData();
-  };
-  useEffect(() => {
-    getData();
-  }, [show]);
+
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
       <div className=" border border-solid border-slate-300 rounded pt-2">
@@ -107,9 +89,12 @@ const Main = () => {
             <div className="p-3">
               <div className="flex justify-between relative">
                 <Link href="" className="flex items-center">
-                  <img
+                  <Image
                     src={`${post?.autherImage || "/images/user.svg"}`}
                     className="w-12 h-12 rounded-full"
+                    width={1500}
+                    height={1500}
+                    alt="post"
                   />
                   <div className="spans flex flex-col ml-2 text-xs ">
                     <span className="font-bold">
@@ -220,11 +205,7 @@ const Main = () => {
           </div>
         </div>
       )}
-      <PostModel
-        show={show}
-        setShow={setShow}
-        handlePostAdded={handlePostAdded}
-      />
+      <PostModel show={show} setShow={setShow} setRefetch={setRefetch} />
     </div>
   );
 };
