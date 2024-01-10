@@ -53,6 +53,7 @@ const SignIn = () => {
       if (res.status === 200) {
         console.log(res.data);
         dispatch(login(res.data));
+        localStorage.setItem("user", JSON.stringify(res.data));
         router.push("/home");
       } else {
         toast.error(res.error);
@@ -80,6 +81,8 @@ const SignIn = () => {
             const res = await signIn(userData);
             if (res.status === 200) {
               dispatch(login(res.data));
+              localStorage.setItem("user", JSON.stringify(res.data));
+
               router.push("/home");
             }
           }

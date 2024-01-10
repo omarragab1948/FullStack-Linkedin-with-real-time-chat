@@ -16,11 +16,7 @@ export default function Home() {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
-        // setUserData({
-        //   userName: user.displayName,
-        //   email: user.email,
-        //   profileImage: user.photoURL,
-        // });
+
         const userData = {
           firstName: user.displayName,
           email: user.email,
@@ -34,6 +30,8 @@ export default function Home() {
             const res = await signIn(userData);
             if (res.status === 200) {
               dispatch(login(res.data));
+              localStorage.setItem("user", JSON.stringify(res.data));
+
               router.push("/home");
             }
           }

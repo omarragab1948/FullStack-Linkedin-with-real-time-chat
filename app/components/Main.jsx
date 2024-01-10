@@ -7,19 +7,39 @@ import Image from "next/image";
 import PostModel from "./PostModel";
 import { useEffect, useState } from "react";
 import { getAllPosts } from "../services/apiHandler";
-import { useSelector } from "react-redux";
-const Main = ({ posts, setRefetch }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../rtk/authSlice";
+const Main = () => {
   const [show, setShow] = useState(false);
+  const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.auth.user?.user);
-  console.log(posts);
+
+  const getData = async () => {
+    setSpinner(true);
+    try {
+      const res = await getAllPosts();
+      if (res.status === 200) {
+        setPosts(res.data);
+        console.log(res);
+        setSpinner(false);
+      }
+    } catch (err) {
+      throw err;
+    }
+  };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     // For example:
     const formattedDate = date.toLocaleString(); // Adjust as per your requirement
     return formattedDate;
   };
-
+  const handlePostAdded = () => {
+    getData();
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
       <div className=" border border-solid border-slate-300 rounded pt-2">
@@ -205,7 +225,11 @@ const Main = ({ posts, setRefetch }) => {
           </div>
         </div>
       )}
-      <PostModel show={show} setShow={setShow} setRefetch={setRefetch} />
+      <PostModel
+        show={show}
+        setShow={setShow}
+        handlePostAdded={handlePostAdded}
+      />
     </div>
   );
 };

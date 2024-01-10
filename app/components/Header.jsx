@@ -8,7 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import "../globals.css";
 import Image from "next/image";
 import { signOut } from "../services/apiHandler";
-import { logout } from "../rtk/authSlice";
+import { login, logout } from "../rtk/authSlice";
 const Header = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
@@ -17,6 +17,11 @@ const Header = () => {
   const router = useRouter();
 
   const user = useSelector((state) => state.auth.user?.user);
+  const local = localStorage.getItem("user");
+
+  useEffect(() => {
+    dispatch(login(JSON.parse(local)));
+  }, []);
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (showMenu && e.target.closest(".menu-container") === null) {
@@ -80,7 +85,7 @@ const Header = () => {
       const res = await signOut();
       if (res.status === 200) {
         router.push("/");
-
+        localStorage.removeItem("user");
         dispatch(logout());
       }
     } catch (e) {
