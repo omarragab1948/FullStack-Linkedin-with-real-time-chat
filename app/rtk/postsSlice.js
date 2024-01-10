@@ -1,7 +1,7 @@
 // postsSlice.js
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllPosts } from "../services/apiHandler";
+import { getAllPosts, addPost as addPostApi } from "../services/apiHandler";
 
 // Async thunk to fetch all posts
 export const fetchPosts = createAsyncThunk(
@@ -19,7 +19,12 @@ const postsSlice = createSlice({
     status: "idle", // 'idle', 'loading', 'succeeded', 'failed'
     error: null,
   },
-  reducers: {},
+  reducers: {
+    addPosts: (state, action) => {
+      // Add the new post to the beginning of the array
+      state.posts = [action.payload, ...state.posts];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
@@ -35,5 +40,8 @@ const postsSlice = createSlice({
       });
   },
 });
+
+export const { addPosts } = postsSlice.actions; // Export the new reducer action
+export const selectPosts = (state) => state.posts.posts;
 
 export default postsSlice.reducer;

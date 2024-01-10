@@ -4,7 +4,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
-import { fetchPosts } from "../rtk/postsSlice";
+import { addPosts, fetchPosts } from "../rtk/postsSlice";
 
 const PostModel = ({ show, setShow }) => {
   const handleDocumentClick = (e) => {
@@ -66,6 +66,7 @@ const PostModel = ({ show, setShow }) => {
         // console.log(res.posts);
         // typeof window !== "undefined" &&
         //   localStorage.setItem("posts", JSON.stringify(res.posts));
+        dispatch(addPosts(res.posts));
         dispatch(fetchPosts());
         dispatch(login(res.data));
         setSpinner(false);
