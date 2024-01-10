@@ -100,8 +100,8 @@ const SignUp = () => {
             const res = await signIn(userData);
             if (res.status === 200) {
               dispatch(login(res.data));
-              localStorage.setItem("user", JSON.stringify(res.data));
-
+              typeof window !== "undefined" &&
+                localStorage.setItem("user", JSON.stringify(res.data));
               router.push("/home");
             }
           }
