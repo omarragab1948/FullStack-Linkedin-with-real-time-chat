@@ -1,29 +1,24 @@
 // postsSlice.js
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllPosts } from "../services/apiHandler";
 
-const initialState = {
-  posts: [],
-  status: "idle", // Can be 'idle', 'loading', 'succeeded', or 'failed'
-  error: null,
-};
-
+// Async thunk to fetch all posts
 export const fetchPosts = createAsyncThunk(
-  "api/posts/getallposts",
+  "/api/posts/getallposts",
   async () => {
-    try {
-      const response = await getAllPosts();
-      console.log(response);
-      return response.data; // Assuming your API returns an array of posts
-    } catch (error) {
-      throw error;
-    }
+    const response = await getAllPosts();
+    return response.data; // Assuming API returns an object with a 'data' property
   }
 );
 
 const postsSlice = createSlice({
   name: "posts",
-  initialState,
+  initialState: {
+    posts: [],
+    status: "idle", // 'idle', 'loading', 'succeeded', 'failed'
+    error: null,
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -33,7 +28,6 @@ const postsSlice = createSlice({
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.posts = action.payload;
-        console.log(action.payload);
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";

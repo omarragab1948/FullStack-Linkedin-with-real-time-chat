@@ -9,9 +9,10 @@ import { useEffect, useState } from "react";
 import { getAllPosts } from "../services/apiHandler";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../rtk/authSlice";
+import { fetchPosts } from "../rtk/postsSlice";
 const Main = () => {
   const [show, setShow] = useState(false);
-  const [posts, setPosts] = useState([]);
+  // const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.auth.user?.user);
 
@@ -20,7 +21,7 @@ const Main = () => {
     try {
       const res = await getAllPosts();
       if (res.status === 200) {
-        setPosts(res.data);
+        // setPosts(res.data);
         console.log(res);
         setSpinner(false);
       }
@@ -41,11 +42,17 @@ const Main = () => {
   // };
 
   // const local = typeof window !== "undefined" && localStorage.getItem("posts");
+  // useEffect(() => {
+  //   // setPosts(JSON.parse(local));
+  //   getData();
+  // }, []);
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts?.posts);
+  console.log(posts);
   useEffect(() => {
-    // setPosts(JSON.parse(local));
-    getData();
-  }, []);
-
+    dispatch(fetchPosts());
+    // setPosts(postsData?.posts);
+  }, [dispatch]);
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
       <div className=" border border-solid border-slate-300 rounded pt-2">
