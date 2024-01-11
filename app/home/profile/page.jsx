@@ -310,13 +310,15 @@ const page = () => {
                             <span>{formatTimestamp(post.date)}</span>
                           </div>
                           <div className="flex items-center mt-2">
-                            <Image
-                              src={post.image}
-                              alt="post"
-                              className="w-12 h-12 mr-2"
-                              width={1500}
-                              height={1500}
-                            />
+                            {post.image && (
+                              <Image
+                                src={post.image}
+                                alt="post"
+                                className="w-12 h-12 mr-2"
+                                width={1500}
+                                height={1500}
+                              />
+                            )}
                             <p className="text-sm font-semibold opacity-90">
                               {post.content}
                             </p>

@@ -242,3 +242,11 @@ export const deleteLanguage = async (id) => {
     throw e;
   }
 };
+export const test = async () => {
+  try {
+    const res = await axios.post("/api/test");
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};

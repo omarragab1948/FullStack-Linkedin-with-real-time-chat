@@ -26,6 +26,8 @@ const page = () => {
     setTypeUpdate(content);
     if (type === "add") {
       setUpdate("add");
+    } else {
+      setUpdate("update");
     }
   };
   const handleShowDelete = (eduId) => {
