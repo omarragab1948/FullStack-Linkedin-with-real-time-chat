@@ -4,6 +4,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
+import { fetchPosts } from "../rtk/postsSlice";
 
 const PostModel = ({ show, setShow, handlePostAdded }) => {
   const handleDocumentClick = (e) => {
@@ -32,6 +33,15 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
   const [imageShow, setImageShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
   const user = useSelector((state) => state.auth.user?.user);
+  const postsSlice = useSelector((state) => state.posts?.posts);
+
+  useEffect(() => {
+    // Update the local state with posts from Redux store
+    if (postsSlice.length > 0) {
+      // Assuming you only want to update local state if postsSlice is not empty
+      dispatch(fetchPosts());
+    }
+  }, []);
   function handleImage(e) {
     const file = e.target.files[0];
     setSrcImage(file);
@@ -63,8 +73,10 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
       console.log(res);
       if (res.status === 201) {
         console.log(res.posts);
-        typeof window !== "undefined" &&
-          localStorage.setItem("posts", JSON.stringify(res.posts));
+        // typeof window !== "undefined" &&
+        //   localStorage.setItem("posts", JSON.stringify(res.posts));
+        dispatch(fetchPosts());
+
         dispatch(login(res.data));
         setSpinner(false);
         setShow(false);

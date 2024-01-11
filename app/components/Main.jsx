@@ -15,9 +15,11 @@ const Main = () => {
   const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.auth.user?.user);
-  const postsSlice = useSelector((state) => state.posts);
+  const postsSlice = useSelector((state) => state.posts?.posts);
   const dispatch = useDispatch();
   console.log(postsSlice);
+  console.log(posts);
+
   const getData = async () => {
     setSpinner(true);
     try {
@@ -37,18 +39,28 @@ const Main = () => {
     return formattedDate;
   };
   const handlePostAdded = () => {
-    const local =
-      typeof window !== "undefined" && localStorage.getItem("posts");
-
-    setPosts(JSON.parse(local));
+    // const local =
+    //   typeof window !== "undefined" && localStorage.getItem("posts");
+    // setPosts(JSON.parse(local));
   };
 
-  const local = typeof window !== "undefined" && localStorage.getItem("posts");
+  // const local = typeof window !== "undefined" && localStorage.getItem("posts");
   useEffect(() => {
-    setPosts(JSON.parse(local));
+    console.log(postsSlice);
     dispatch(fetchPosts());
-    // getData();
-  }, [local, dispatch]);
+    setPosts(postsSlice);
+  }, []);
+  useEffect(() => {
+    // Update the local state with posts from Redux store
+    if (postsSlice.length > 0) {
+      // Assuming you only want to update local state if postsSlice is not empty
+      setPosts(postsSlice);
+    }
+  }, [postsSlice]);
+  // useEffect(() => {
+  //   // setPosts(JSON.parse(local));
+  //   // getData();
+  // }, [local]);
 
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
