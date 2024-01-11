@@ -35,13 +35,13 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
   const user = useSelector((state) => state.auth.user?.user);
   const postsSlice = useSelector((state) => state.posts?.posts);
 
-  useEffect(() => {
-    // Update the local state with posts from Redux store
-    if (postsSlice.length > 0) {
-      // Assuming you only want to update local state if postsSlice is not empty
-      dispatch(fetchPosts());
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Update the local state with posts from Redux store
+  //   if (postsSlice.length > 0) {
+  //     // Assuming you only want to update local state if postsSlice is not empty
+  //     dispatch(fetchPosts());
+  //   }
+  // }, []);
   function handleImage(e) {
     const file = e.target.files[0];
     setSrcImage(file);
@@ -75,8 +75,8 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
         console.log(res.posts);
         // typeof window !== "undefined" &&
         //   localStorage.setItem("posts", JSON.stringify(res.posts));
-        dispatch(fetchPosts());
-
+        // dispatch(fetchPosts());
+        handlePostAdded();
         dispatch(login(res.data));
         setSpinner(false);
         setShow(false);

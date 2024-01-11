@@ -39,28 +39,30 @@ const Main = () => {
     return formattedDate;
   };
   const handlePostAdded = () => {
+    getData();
+
     // const local =
     //   typeof window !== "undefined" && localStorage.getItem("posts");
     // setPosts(JSON.parse(local));
   };
 
   // const local = typeof window !== "undefined" && localStorage.getItem("posts");
-  useEffect(() => {
-    console.log(postsSlice);
-    dispatch(fetchPosts());
-    setPosts(postsSlice);
-  }, []);
-  useEffect(() => {
-    // Update the local state with posts from Redux store
-    if (postsSlice.length > 0) {
-      // Assuming you only want to update local state if postsSlice is not empty
-      setPosts(postsSlice);
-    }
-  }, [postsSlice]);
   // useEffect(() => {
-  //   // setPosts(JSON.parse(local));
-  //   // getData();
-  // }, [local]);
+  //   console.log(postsSlice);
+  //   dispatch(fetchPosts());
+  //   setPosts(postsSlice);
+  // }, []);
+  // useEffect(() => {
+  //   // Update the local state with posts from Redux store
+  //   if (postsSlice.length > 0) {
+  //     // Assuming you only want to update local state if postsSlice is not empty
+  //     setPosts(postsSlice);
+  //   }
+  // }, [postsSlice]);
+  useEffect(() => {
+    // setPosts(JSON.parse(local));
+    getData();
+  }, []);
 
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">

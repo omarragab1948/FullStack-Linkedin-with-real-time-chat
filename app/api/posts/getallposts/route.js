@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // defaults to auto
+
 import connectToMongoDB from "@/app/utils/connectDB";
 
 const { Post } = require("@/app/utils/models");
