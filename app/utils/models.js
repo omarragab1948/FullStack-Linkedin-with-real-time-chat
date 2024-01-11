@@ -61,6 +61,28 @@ const languageSchema = new mongoose.Schema({
     type: String,
   },
 });
+
+const messageSchema = new mongoose.Schema({
+  senderId: {
+    type: String,
+    required: true,
+  },
+  receiverId: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  seen: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+});
+
 const userSchema = new mongoose.Schema({
   backgroundImage: {
     type: String,
@@ -96,6 +118,7 @@ const userSchema = new mongoose.Schema({
   },
   skills: [skillSchema],
   languages: [languageSchema],
+  chat: [messageSchema],
 });
 
 const User = models.User || mongoose.model("User", userSchema);
