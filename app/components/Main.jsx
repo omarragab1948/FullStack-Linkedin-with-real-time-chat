@@ -12,16 +12,18 @@ import { login } from "../rtk/authSlice";
 import { fetchPosts } from "../rtk/postsSlice";
 const Main = () => {
   const [show, setShow] = useState(false);
-  // const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.auth.user?.user);
-
+  const postsSlice = useSelector((state) => state.posts);
+  const dispatch = useDispatch();
+  console.log(postsSlice);
   const getData = async () => {
     setSpinner(true);
     try {
       const res = await getAllPosts();
       if (res.status === 200) {
-        // setPosts(res.data);
+        setPosts(res.data);
         console.log(res);
         setSpinner(false);
       }
@@ -34,25 +36,20 @@ const Main = () => {
     const formattedDate = date.toLocaleString();
     return formattedDate;
   };
-  // const handlePostAdded = () => {
-  //   // const local =
-  //   //   typeof window !== "undefined" && localStorage.getItem("posts");
+  const handlePostAdded = () => {
+    const local =
+      typeof window !== "undefined" && localStorage.getItem("posts");
 
-  //   // setPosts(JSON.parse(local));
-  // };
+    setPosts(JSON.parse(local));
+  };
 
-  // const local = typeof window !== "undefined" && localStorage.getItem("posts");
-  // useEffect(() => {
-  //   // setPosts(JSON.parse(local));
-  //   getData();
-  // }, []);
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts);
-  console.log(posts.status);
+  const local = typeof window !== "undefined" && localStorage.getItem("posts");
   useEffect(() => {
+    setPosts(JSON.parse(local));
     dispatch(fetchPosts());
-    // setPosts(postsData?.posts);
-  }, []);
+    // getData();
+  }, [local, dispatch]);
+
   return (
     <div className="w-full md:w-[80%] lg:w-1/2 flex relative top-[73px] flex-col mr-4 mb-3 text-center overflow-hidden rounded-md  border-0">
       <div className=" border border-solid border-slate-300 rounded pt-2">
@@ -113,8 +110,8 @@ const Main = () => {
           } border-gray-400 border-t-blue-500 rounded-full w-8 h-8 animate-spin`}
         ></div>
       )}
-      {posts.status === "succeeded" ? (
-        posts?.posts?.map((post, index) => (
+      {posts?.length > 0 ? (
+        posts.map((post, index) => (
           <div
             key={index}
             className="mt-3  bg-main-dark-bg p-2  rounded border border-solid border-slate-300"
@@ -238,7 +235,11 @@ const Main = () => {
           </div>
         </div>
       )}
-      <PostModel show={show} setShow={setShow} />
+      <PostModel
+        show={show}
+        setShow={setShow}
+        handlePostAdded={handlePostAdded}
+      />
     </div>
   );
 };

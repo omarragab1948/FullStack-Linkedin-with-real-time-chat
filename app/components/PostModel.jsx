@@ -4,9 +4,8 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
-import { addPosts, fetchPosts } from "../rtk/postsSlice";
 
-const PostModel = ({ show, setShow }) => {
+const PostModel = ({ show, setShow, handlePostAdded }) => {
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
     if (show && e.target.closest(".menu-container") === null) {
@@ -63,11 +62,9 @@ const PostModel = ({ show, setShow }) => {
       const res = await addPost(formData);
       console.log(res);
       if (res.status === 201) {
-        // console.log(res.posts);
-        // typeof window !== "undefined" &&
-        //   localStorage.setItem("posts", JSON.stringify(res.posts));
-        dispatch(addPosts(res.posts));
-        dispatch(fetchPosts());
+        console.log(res.posts);
+        typeof window !== "undefined" &&
+          localStorage.setItem("posts", JSON.stringify(res.posts));
         dispatch(login(res.data));
         setSpinner(false);
         setShow(false);
