@@ -2,23 +2,17 @@
 import { SlLike } from "react-icons/sl";
 import { BiRepost } from "react-icons/bi";
 import Link from "next/link";
-import article from "@/public/images/shared-image.jpg";
 import Image from "next/image";
 import PostModel from "./PostModel";
 import { useEffect, useState } from "react";
 import { getAllPosts } from "../services/apiHandler";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../rtk/authSlice";
-import { fetchPosts } from "../rtk/postsSlice";
+import { useSelector } from "react-redux";
+
 const Main = () => {
   const [show, setShow] = useState(false);
   const [posts, setPosts] = useState([]);
   const [spinner, setSpinner] = useState(false);
   const user = useSelector((state) => state.auth.user?.user);
-  const postsSlice = useSelector((state) => state.posts?.posts);
-  const dispatch = useDispatch();
-  console.log(postsSlice);
-  console.log(posts);
 
   const getData = async () => {
     setSpinner(true);
@@ -40,27 +34,9 @@ const Main = () => {
   };
   const handlePostAdded = () => {
     getData();
-
-    // const local =
-    //   typeof window !== "undefined" && localStorage.getItem("posts");
-    // setPosts(JSON.parse(local));
   };
 
-  // const local = typeof window !== "undefined" && localStorage.getItem("posts");
-  // useEffect(() => {
-  //   console.log(postsSlice);
-  //   dispatch(fetchPosts());
-  //   setPosts(postsSlice);
-  // }, []);
-  // useEffect(() => {
-  //   // Update the local state with posts from Redux store
-  //   if (postsSlice.length > 0) {
-  //     // Assuming you only want to update local state if postsSlice is not empty
-  //     setPosts(postsSlice);
-  //   }
-  // }, [postsSlice]);
   useEffect(() => {
-    // setPosts(JSON.parse(local));
     getData();
   }, []);
 

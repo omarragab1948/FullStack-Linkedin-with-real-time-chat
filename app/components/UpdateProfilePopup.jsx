@@ -28,6 +28,9 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
     // Check if the clicked element is not part of the menu
     if (show && e.target.closest(".menu-container") === null) {
       setShowProfilePop(false); // Fix this line to use setShow instead of setShowMenu
+      setEditorText("");
+      setAddSkills("");
+      setAddLanguages("");
     }
   };
 
@@ -41,6 +44,12 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
     };
   }, [show]);
 
+  const handleShowProfilePopup = () => {
+    setShowProfilePop(false);
+    setEditorText("");
+    setAddSkills("");
+    setAddLanguages("");
+  };
   const handleAddAbout = async () => {
     setSpinner(true);
     const formData = new FormData();
@@ -68,6 +77,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
         dispatch(login(res.data));
         typeof window !== "undefined" &&
           localStorage.setItem("user", JSON.stringify(res.data));
+        setAddSkills("");
         setSpinner(false);
         setShowProfilePop(false);
       }
@@ -119,6 +129,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
         dispatch(login(res.data));
         typeof window !== "undefined" &&
           localStorage.setItem("user", JSON.stringify(res.data));
+        setAddLanguages("");
         setSpinner(false);
         setShowProfilePop(false);
       }
@@ -150,7 +161,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
             <div className="py-2 px-3 flex w-full  justify-start relative items-center">
               <span className="text-xl font-semibold">{type} </span>
               <button
-                onClick={() => setShowProfilePop(false)}
+                onClick={handleShowProfilePopup}
                 className="text-2xl absolute top-2 right-2"
               >
                 <IoCloseSharp />

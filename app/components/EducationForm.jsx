@@ -9,7 +9,7 @@ const EducationForm = ({ show, update, setShow, id }) => {
   console.log(id);
   const dispatch = useDispatch();
   const [spinner, setSpinner] = useState(false);
-
+  console.log(update);
   const [education, setEducation] = useState({
     id: 1,
     institution: "",
