@@ -22,51 +22,51 @@ const Page = () => {
   useEffect(() => {
     handleGetUsers();
   }, []);
-  const [chats, setChats] = useState([
-    {
-      id: 1,
-      user: {
-        id: 1,
-        name: "Ahmed",
-        image: userImage,
-      },
-      messages: [
-        { id: 1, senderName: "John Doe", message: "Hello there!" },
-        { id: 2, senderName: "John Doe", message: "Hello there!" },
-        { id: 3, senderName: "John Doe", message: "Hello there!" },
-        { id: 4, senderName: "John Doe", message: "Hello there!" },
-        { id: 5, senderName: "John Doe", message: "Hello there!" },
-        { id: 6, senderName: "John Doe", message: "Hello there!" },
-        { id: 7, senderName: "John Doe", message: "Hello there!" },
-        { id: 8, senderName: "John Doe", message: "Hello there!" },
-        { id: 9, senderName: "John Doe", message: "Hello there!" },
-        { id: 10, senderName: "John Doe", message: "Hello there!" },
-        { id: 11, senderName: "John Doe", message: "Hello there!" },
-      ],
-    },
-    {
-      id: 2,
-      user: {
-        id: 2,
-        name: "Omar",
-        image: userImage,
-      },
-      messages: [
-        { id: 1, senderName: "Omar", message: "Hello there!" },
-        { id: 2, senderName: "John Doe", message: "Hello there!" },
-        { id: 3, senderName: "John Doe", message: "Hello there!" },
-        { id: 4, senderName: "John Doe", message: "Hello there!" },
-        { id: 5, senderName: "Omar", message: "Hello there!" },
-        { id: 6, senderName: "John Doe", message: "Hello there!" },
-        { id: 8, senderName: "Omar", message: "Hello there!" },
-        { id: 9, senderName: "Omar ", message: "Hello there!" },
-        { id: 10, senderName: "John Doe", message: "Hello there!" },
-        { id: 11, senderName: "Omar", message: "Hello there!" },
-        { id: 12, senderName: "John Doe", message: "Hello there!" },
-      ],
-    },
-    // Add more chats as needed
-  ]);
+  // const [chats, setChats] = useState([
+  //   {
+  //     id: 1,
+  //     user: {
+  //       id: 1,
+  //       name: "Ahmed",
+  //       image: userImage,
+  //     },
+  //     messages: [
+  //       { id: 1, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 2, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 3, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 4, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 5, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 6, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 7, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 8, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 9, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 10, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 11, senderName: "John Doe", message: "Hello there!" },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     user: {
+  //       id: 2,
+  //       name: "Omar",
+  //       image: userImage,
+  //     },
+  //     messages: [
+  //       { id: 1, senderName: "Omar", message: "Hello there!" },
+  //       { id: 2, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 3, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 4, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 5, senderName: "Omar", message: "Hello there!" },
+  //       { id: 6, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 8, senderName: "Omar", message: "Hello there!" },
+  //       { id: 9, senderName: "Omar ", message: "Hello there!" },
+  //       { id: 10, senderName: "John Doe", message: "Hello there!" },
+  //       { id: 11, senderName: "Omar", message: "Hello there!" },
+  //       { id: 12, senderName: "John Doe", message: "Hello there!" },
+  //     ],
+  //   },
+  //   // Add more chats as needed
+  // ]);
   const userr = useSelector((state) => state.auth.user?.user);
   const [selectedChat, setSelectedChat] = useState(users[0]);
   const [socket, setSocket] = useState(null);

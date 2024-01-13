@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic"; // defaults to auto
+
+import connectToMongoDB from "@/app/utils/connectDB";
 import { verifyToken } from "@/app/utils/handleToken";
 import { User } from "@/app/utils/models";
 
@@ -17,7 +20,7 @@ export const GET = async (request) => {
       status: 401,
     });
   }
-
+  connectToMongoDB();
   const existUser = await User.findById(autherId);
   if (!existUser) {
     return Response.json({

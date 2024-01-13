@@ -19,8 +19,12 @@ export const GET = async (request) => {
       status: 401,
     });
   }
+  const data = {
+    user: existUser,
+    token,
+  };
   const response = Response.json({
-    data: existUser,
+    data: data,
     status: 200,
   });
   return response;

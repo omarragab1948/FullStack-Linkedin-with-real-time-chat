@@ -50,6 +50,7 @@ export const getAllPosts = async () => {
 export const getAllUsers = async () => {
   try {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
+    console.log("token: " + token);
     const res = await axios.get("/api/users/getusers", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -245,6 +246,68 @@ export const deleteLanguage = async (id) => {
 export const test = async () => {
   try {
     const res = await axios.post("/api/test");
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const connect = async (id) => {
+  const userId = {
+    userIdToConnect: id,
+  };
+
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+
+    const res = await axios.post("/api/users/connection/connect", userId, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const acceptConnect = async (id) => {
+  const userId = {
+    userIdToConnect: id,
+  };
+
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+
+    const res = await axios.post(
+      "/api/users/connection/acceptconnect",
+      userId,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const rejectConnect = async (id) => {
+  const userId = {
+    userIdToConnect: id,
+  };
+
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+
+    const res = await axios.post(
+      "/api/users/connection/rejectconnect",
+      userId,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return res.data;
   } catch (e) {
     throw e;

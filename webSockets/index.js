@@ -21,13 +21,27 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("A user connected");
   const id = socket.handshake.query.id;
   socket.join(id);
-  console.log(id);
   socket.on("send message", (message, roomId) => {
-    console.log("Sending message", message, roomId);
     socket.to(roomId).emit("received message", message);
+  });
+
+  socket.on("send connect", (receiver, sender) => {
+    socket.broadcast
+      .to(receiver?._id)
+      .emit("received connect", { receiver, sender });
+  });
+  socket.on("accept connect", (receiver) => {
+    socket.broadcast
+      .to(receiver?.requesterId)
+      .emit("connect accepted", receiver);
+  });
+  socket.on("reject connect", (receiver) => {
+    console.log(receiver);
+    socket.broadcast
+      .to(receiver?.requesterId)
+      .emit("connect rejected", receiver);
   });
 });
 

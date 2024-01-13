@@ -83,6 +83,106 @@ const messageSchema = new mongoose.Schema({
   },
 });
 
+const pendingConnectionSchema = new mongoose.Schema({
+  receiverId: {
+    type: String,
+    required: true,
+  },
+  requesterId: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    default: "pending",
+  },
+  requesterBackgroundImage: {
+    type: String,
+  },
+  requesterProfileImage: {
+    type: String,
+  },
+  requesterFirstName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  requesterLastName: {
+    type: String,
+    trim: true,
+  },
+  requesterTitle: {
+    type: String,
+  },
+  receiverBackgroundImage: {
+    type: String,
+  },
+  receiverProfileImage: {
+    type: String,
+  },
+  receiverFirstName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  receiverLastName: {
+    type: String,
+    trim: true,
+  },
+  receiverTitle: {
+    type: String,
+  },
+});
+const acceptedConnectionSchema = new mongoose.Schema({
+  receiverId: {
+    type: String,
+    required: true,
+  },
+  requesterId: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    default: "accepted",
+  },
+  requesterBackgroundImage: {
+    type: String,
+  },
+  requesterProfileImage: {
+    type: String,
+  },
+  requesterFirstName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  requesterLastName: {
+    type: String,
+    trim: true,
+  },
+  requesterTitle: {
+    type: String,
+  },
+  receiverBackgroundImage: {
+    type: String,
+  },
+  receiverProfileImage: {
+    type: String,
+  },
+  receiverFirstName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  receiverLastName: {
+    type: String,
+    trim: true,
+  },
+  receiverTitle: {
+    type: String,
+  },
+});
 const userSchema = new mongoose.Schema({
   backgroundImage: {
     type: String,
@@ -119,6 +219,8 @@ const userSchema = new mongoose.Schema({
   skills: [skillSchema],
   languages: [languageSchema],
   chat: [messageSchema],
+  acceptedConnections: [acceptedConnectionSchema],
+  pendingConnections: [pendingConnectionSchema],
 });
 
 const User = models.User || mongoose.model("User", userSchema);

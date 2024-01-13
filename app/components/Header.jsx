@@ -15,12 +15,22 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-  const user = useSelector((state) => state.auth.user?.user);
-
-  const local = typeof window !== "undefined" && localStorage.getItem("user");
+  const [user, setUser] = useState(null);
   useEffect(() => {
-    dispatch(login(JSON.parse(local)));
-  }, []);
+    const loginUser = async () => {
+      try {
+        await dispatch(login()).then((data) => {
+          setUser(data.payload.user);
+          typeof window !== "undefined" &&
+            localStorage.setItem("user", JSON.stringify(data.payload));
+        });
+      } catch (error) {
+        console.error("Error logging in:", error);
+      }
+    };
+
+    loginUser();
+  }, [dispatch]);
 
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
