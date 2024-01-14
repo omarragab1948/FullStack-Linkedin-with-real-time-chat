@@ -20,7 +20,7 @@ const Page = () => {
   const [selectedTab, setSelectedTab] = useState("recommendations");
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3001", {
+    const newSocket = io("https://linkedin-websockets.onrender.com", {
       query: { id: user?._id },
     });
 
