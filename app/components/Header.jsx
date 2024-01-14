@@ -22,7 +22,7 @@ const Header = () => {
   const [socket, setSocket] = useState(null);
   const [notifications, setNotifications] = useState(0);
   useEffect(() => {
-    const newSocket = io("http://localhost:3001", {
+    const newSocket = io("https://linkedin-websockets.onrender.com", {
       query: { id: user?._id },
     });
 
