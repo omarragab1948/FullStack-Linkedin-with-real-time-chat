@@ -71,6 +71,10 @@ const messageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  content: {
+    type: String,
+    required: true,
+  },
   date: {
     type: Date,
     required: true,
@@ -182,6 +186,7 @@ const acceptedConnectionSchema = new mongoose.Schema({
   receiverTitle: {
     type: String,
   },
+  chat: [messageSchema],
 });
 const userSchema = new mongoose.Schema({
   backgroundImage: {

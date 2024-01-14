@@ -313,3 +313,22 @@ export const rejectConnect = async (id) => {
     throw e;
   }
 };
+export const sendMessageToBE = async (id, messageContent) => {
+  const userId = {
+    userIdToConnect: id,
+    messageContent,
+  };
+
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+
+    const res = await axios.post("/api/users/chat/sendmessage", userId, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};

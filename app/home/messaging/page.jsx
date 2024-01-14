@@ -5,7 +5,7 @@ import Image from "next/image";
 import TestSocket from "@/app/components/TestSocket";
 import io from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers } from "@/app/services/apiHandler";
+import { getAllUsers, sendMessageToBE } from "@/app/services/apiHandler";
 import { login } from "@/app/rtk/authSlice";
 import Link from "next/link";
 
@@ -76,14 +76,14 @@ const Page = () => {
   const [socket, setSocket] = useState(null);
   const [sendMessage, setSendMessage] = useState("");
   const [openMessage, setOpenMessage] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      sender: "",
-      content: "",
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    if (selectedChat?.chat?.length > 0) {
+      setMessages([...selectedChat?.chat]);
+    }
+  }, [selectedChat]);
   const dispatch = useDispatch();
-  console.log(selectedChat);
+  console.log(selectedChat?.chat);
   const loginUser = async () => {
     try {
       await dispatch(login()).then((data) => {
@@ -94,7 +94,7 @@ const Page = () => {
       console.error("Error logging in:", error);
     }
   };
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (socket !== null) {
       socket.emit(
         "send message",
@@ -103,17 +103,27 @@ const Page = () => {
           ? selectedChat?.requesterId
           : selectedChat?.receiverId
       );
+      try {
+        const res = await sendMessageToBE(
+          selectedChat?.receiverId === userr?._id
+            ? selectedChat?.requesterId
+            : selectedChat?.receiverId,
+          sendMessage
+        );
+      } catch (error) {
+        throw error;
+      }
       setMessages((prev) => [
         ...prev,
         {
-          sender: userr?.firstName,
+          senderId: userr?._id,
           content: sendMessage,
         },
       ]);
       setSendMessage("");
       // setTimeout(async () => {
       //   await loginUser();
-      // }, 1000);
+      // }, 500);
     }
   };
   const handleOpenMessage = (chat) => {
@@ -137,13 +147,16 @@ const Page = () => {
           content: message,
         },
       ]);
+      // setTimeout(async () => {
+      //   await loginUser();
+      // }, 500);
       // You may want to update the state and perform other actions here
     });
     return () => {
       newSocket.disconnect();
     };
   }, [userr]);
-
+  console.log(messages);
   return (
     <>
       <div className="hidden md:flex flex-col px-3 mt-24">
@@ -238,11 +251,11 @@ const Page = () => {
                 </div>
               )}
               <div className="flex items-center flex-col h-64 overflow-auto border-b-slate-300 border-solid px-4">
-                {messages?.map((message, i) => (
+                {selectedChat?.chat?.map((message, i) => (
                   <div
                     key={i}
                     className={`flex justify-${
-                      message.sender === userr?.firstName
+                      message.senderId === userr?._id
                         ? "end text-blue-600"
                         : "start text-red-600"
                     } w-full my-2 font-semibold`}
@@ -376,7 +389,7 @@ const Page = () => {
                 <div
                   key={i}
                   className={`flex justify-${
-                    message.sender === userr?.firstName
+                    message.senderId === userr?._id
                       ? "end text-blue-600"
                       : "start text-red-600"
                   } w-full my-2 font-semibold`}
