@@ -8,14 +8,14 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 app.use(
   cors({
-    origin: "https://full-stack-linkedin-with-real-time-chat.vercel.app",
+    origin: "http://localhost:3000",
   })
 );
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://full-stack-linkedin-with-real-time-chat.vercel.app",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });

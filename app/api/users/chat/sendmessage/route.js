@@ -39,7 +39,8 @@ export const POST = async (request) => {
         status: 404,
       });
     }
-
+    console.log(existUser);
+    console.log(userToConnect);
     // Find the connection with the specified receiverId
     const connectionToModify = existUser.acceptedConnections.find(
       (connection) =>
@@ -51,6 +52,9 @@ export const POST = async (request) => {
         connection.receiverId === userIdToConnect ||
         connection.requesterId === userIdToConnect
     );
+    console.log("connectionToModify", connectionToModify);
+    console.log("connectionToModify2", connectionToModify2);
+
     if (!connectionToModify) {
       return Response.json({
         message: "Connection not found",
@@ -70,8 +74,6 @@ export const POST = async (request) => {
 
     await existUser.save();
     await userToConnect.save();
-    console.log(existUser);
-    console.log(userToConnect);
 
     return Response.json({ data: existUser, status: 200 });
   } catch (error) {

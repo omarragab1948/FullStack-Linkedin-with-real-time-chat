@@ -318,7 +318,6 @@ export const sendMessageToBE = async (id, messageContent) => {
     userIdToConnect: id,
     messageContent,
   };
-
   try {
     const token = JSON.parse(localStorage.getItem("user")).token;
 

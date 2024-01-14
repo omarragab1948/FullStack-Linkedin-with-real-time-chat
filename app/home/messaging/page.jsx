@@ -140,6 +140,7 @@ const Page = () => {
       console.log("connected");
     });
     newSocket.on("received message", (message) => {
+      console.log(message);
       setMessages((prev) => [
         ...prev,
         {
@@ -155,7 +156,7 @@ const Page = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [userr]);
+  }, [userr, messages]);
   console.log(messages);
   return (
     <>
@@ -251,7 +252,7 @@ const Page = () => {
                 </div>
               )}
               <div className="flex items-center flex-col h-64 overflow-auto border-b-slate-300 border-solid px-4">
-                {selectedChat?.chat?.map((message, i) => (
+                {messages?.map((message, i) => (
                   <div
                     key={i}
                     className={`flex justify-${
