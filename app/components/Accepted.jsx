@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import userImage from "@/public/images/user.svg";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 const Accepted = ({ user }) => {
   const status = useSelector((state) => state.auth?.status);
@@ -56,12 +57,12 @@ const Accepted = ({ user }) => {
               </div>
             </div>
 
-            <button
-              onClick={() => handleConnect(item)}
+            <Link
+              href="/home/messaging"
               className="text-blue-600 rounded-full py-1 px-3 font-semibold duration-300 hover:bg-blue-600 hover:text-white border border-solid border-blue-600"
             >
               Send a message
-            </button>
+            </Link>
           </div>
         ))
       ) : (

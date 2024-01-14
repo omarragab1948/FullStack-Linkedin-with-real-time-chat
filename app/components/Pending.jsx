@@ -14,7 +14,7 @@ const Pending = ({ user }) => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const newSocket = io("https://linkedin-websockets.onrender.com", {
+    const newSocket = io("http://localhost:3001", {
       query: { id: user?._id },
     });
     setSocket(newSocket);
@@ -36,7 +36,9 @@ const Pending = ({ user }) => {
   const sendAcceptToSocket = async (item) => {
     if (socket !== null) {
       socket.emit("accept connect", item);
-      toast.success(`You accept connect request from ${user?.firstName}`);
+      toast.success(
+        `You accept connect request from ${item?.requesterFirstName}`
+      );
       setTimeout(async () => {
         await loginUser();
       }, 1000);
@@ -74,27 +76,6 @@ const Pending = ({ user }) => {
     }
   };
 
-  useEffect(() => {
-    if (socket !== null) {
-      socket.on("connect accepted", async (message) => {
-        toast.success(
-          `Your connect request from ${message?.requesterFirstName} is accepted`
-        );
-        setTimeout(async () => {
-          await loginUser();
-        }, 1000);
-      });
-
-      socket.on("connect rejected", async (message) => {
-        toast.success(
-          `Your connect request from ${message?.receiverFirstName} is rejected`
-        );
-        setTimeout(async () => {
-          await loginUser();
-        }, 1000);
-      });
-    }
-  }, [sendAcceptToSocket, sendRejectToSocket, socket]);
   if (status === "loading") {
     return (
       <div
@@ -110,8 +91,6 @@ const Pending = ({ user }) => {
             key={i}
             className="text-center hover:scale-105 rounded-t-xl overflow-hidden rounded pb-3 w-4/5 sm:w-3/5 my-3 lg:w-1/4 mx-2 duration-300 border border-solid border-slate-300 hover:bg-slate-300"
           >
-            <ToastContainer />
-
             <div className="w-full">
               {item?.receiverBackgroundImage ? (
                 <Image

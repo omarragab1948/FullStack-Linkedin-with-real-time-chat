@@ -7,8 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import "../globals.css";
 import Image from "next/image";
-import { getUser, signOut } from "../services/apiHandler";
+import { signOut } from "../services/apiHandler";
 import { login, logout } from "../rtk/authSlice";
+import { ToastContainer, toast } from "react-toastify";
+import io from "socket.io-client";
+
 const Header = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
@@ -16,21 +19,67 @@ const Header = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [notifications, setNotifications] = useState(0);
   useEffect(() => {
-    const loginUser = async () => {
-      try {
-        await dispatch(login()).then((data) => {
-          setUser(data.payload.user);
-          typeof window !== "undefined" &&
-            localStorage.setItem("user", JSON.stringify(data.payload));
-        });
-      } catch (error) {
-        console.error("Error logging in:", error);
-      }
-    };
+    const newSocket = io("http://localhost:3001", {
+      query: { id: user?._id },
+    });
 
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      console.log("connected");
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [user]);
+  const loginUser = async () => {
+    try {
+      await dispatch(login()).then((data) => {
+        setUser(data.payload.user);
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(data.payload));
+      });
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
+  };
+  useEffect(() => {
     loginUser();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (socket !== null) {
+      socket.on("received connect", async (message) => {
+        setNotifications(notifications + 1);
+        setTimeout(async () => {
+          await loginUser();
+        }, 1000);
+      });
+    }
+  }, [socket]);
+  useEffect(() => {
+    if (socket !== null) {
+      socket.on("connect accepted", async (message) => {
+        setNotifications(notifications + 1);
+
+        setTimeout(async () => {
+          await loginUser();
+        }, 1000);
+      });
+
+      socket.on("connect rejected", async (message) => {
+        setNotifications(notifications + 1);
+
+        setTimeout(async () => {
+          await loginUser();
+        }, 1000);
+      });
+    }
+  }, [socket]);
 
   const handleDocumentClick = (e) => {
     // Check if the clicked element is not part of the menu
@@ -48,14 +97,7 @@ const Header = () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [showMenu]);
-  const notifications = [
-    { message: "Welcome to our website!", timestamp: "1/5/2024, 12:00:00 PM" },
-    { message: "You have a new message.", timestamp: "1/5/2024, 12:01:00 PM" },
-    {
-      message: "Reminder: Meeting at 2 PM.",
-      timestamp: "1/5/2024, 12:02:00 PM",
-    },
-  ];
+
   const messages = [
     { message: "Welcome to our website!", timestamp: "1/5/2024, 12:00:00 PM" },
     { message: "You have a new message.", timestamp: "1/5/2024, 12:01:00 PM" },
@@ -104,6 +146,8 @@ const Header = () => {
   };
   return (
     <header className="bg-white bg-main-dark-bg fixed top-0 w-full lg:px-24 z-50">
+      <ToastContainer />
+
       <div className=" p-2 m-auto flex justify-start px-10 md:justify-between items-center">
         <div className="flex mr-2 w-full sm:w-full md:w-fit justify-center items-center">
           <div>
@@ -239,9 +283,9 @@ const Header = () => {
                 currentPath === "notifications" && "active"
               } text-black relative hover:opacity-100  flex flex-col items-center justify-center opacity-70  duration-300`}
             >
-              {notifications && (
+              {notifications > 0 && (
                 <span className="text-white text-xs w-5 h-5 rounded-full flex justify-center absolute top-[-2px] left-[38px] sm:left-4 md:left-[45px] p-1 items-center bg-[#cb112d]">
-                  {notifications.length}
+                  {notifications}
                 </span>
               )}
               <svg

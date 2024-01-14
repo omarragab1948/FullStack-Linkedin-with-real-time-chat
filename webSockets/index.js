@@ -24,6 +24,9 @@ io.on("connection", (socket) => {
   const id = socket.handshake.query.id;
   socket.join(id);
   socket.on("send message", (message, roomId) => {
+    console.log("room", roomId);
+    console.log("message", message);
+
     socket.to(roomId).emit("received message", message);
   });
 
@@ -38,7 +41,6 @@ io.on("connection", (socket) => {
       .emit("connect accepted", receiver);
   });
   socket.on("reject connect", (receiver) => {
-    console.log(receiver);
     socket.broadcast
       .to(receiver?.requesterId)
       .emit("connect rejected", receiver);
