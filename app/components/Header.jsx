@@ -21,21 +21,7 @@ const Header = () => {
   const [user, setUser] = useState(null);
   const [socket, setSocket] = useState(null);
   const [notifications, setNotifications] = useState(0);
-  useEffect(() => {
-    const newSocket = io("https://linkedin-websockets.onrender.com", {
-      query: { id: user?._id },
-    });
-
-    setSocket(newSocket);
-
-    newSocket.on("connect", () => {
-      console.log("connected");
-    });
-
-    return () => {
-      newSocket.disconnect();
-    };
-  }, [user]);
+  const [newMessage, setNewMessage] = useState(0);
   const loginUser = async () => {
     try {
       await dispatch(login()).then((data) => {
@@ -48,8 +34,37 @@ const Header = () => {
     }
   };
   useEffect(() => {
-    loginUser();
-  }, [dispatch]);
+    const newSocket = io("https://linkedin-websockets.onrender.com", {
+      query: { id: user?._id },
+    });
+
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      console.log("connected");
+    });
+
+    newSocket.on("received message", async (message) => {
+      console.log(message);
+      setNewMessage(newMessage + 1);
+
+      if (message) {
+        setTimeout(async () => {
+          await loginUser();
+        }, 1500);
+      }
+    });
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [user]);
+  console.log(newMessage);
+
+  useEffect(() => {
+    setTimeout(async () => {
+      await loginUser();
+    }, 500);
+  }, [newMessage]);
 
   useEffect(() => {
     if (socket !== null) {
@@ -256,9 +271,9 @@ const Header = () => {
                 currentPath === "messaging" && "active"
               } text-black relative hover:opacity-100 flex flex-col items-center justify-center opacity-70  duration-300`}
             >
-              {messages && (
+              {newMessage && (
                 <span className="text-white text-xs w-5 h-5 rounded-full flex justify-center absolute top-[-2px] left-[38px] sm:left-4 md:left-[45px] p-1 items-center bg-[#cb112d]">
-                  {messages.length}
+                  {newMessage}
                 </span>
               )}
               <svg

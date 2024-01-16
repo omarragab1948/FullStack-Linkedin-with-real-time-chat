@@ -50,7 +50,6 @@ export const getAllPosts = async () => {
 export const getAllUsers = async () => {
   try {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
-    console.log("token: " + token);
     const res = await axios.get("/api/users/getusers", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -144,7 +143,6 @@ export const UpdateEducation = async (formData, id) => {
 };
 
 export const deleteEducation = async (id) => {
-  console.log(id);
   try {
     const token = JSON.parse(localStorage.getItem("user")).token;
     const res = await axios.delete(`/api/users/education/delete/${id}`, {

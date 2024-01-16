@@ -20,7 +20,6 @@ const Main = () => {
       const res = await getAllPosts();
       if (res.status === 200) {
         setPosts(res.data);
-        console.log(res);
         setSpinner(false);
       }
     } catch (err) {

@@ -39,38 +39,44 @@ export const POST = async (request) => {
         status: 404,
       });
     }
-    console.log(existUser);
-    console.log(userToConnect);
-    // Find the connection with the specified receiverId
-    const connectionToModify = existUser.acceptedConnections.find(
-      (connection) =>
-        connection.receiverId === userIdToConnect ||
-        connection.requesterId === userIdToConnect
-    );
-    const connectionToModify2 = userToConnect.acceptedConnections.find(
-      (connection) =>
-        connection.receiverId === userIdToConnect ||
-        connection.requesterId === userIdToConnect
-    );
-    console.log("connectionToModify", connectionToModify);
-    console.log("connectionToModify2", connectionToModify2);
 
-    if (!connectionToModify) {
+    let commonChannel = null;
+
+    for (const conn1 of existUser.acceptedConnections) {
+      for (const conn2 of userToConnect.acceptedConnections) {
+        if (conn1.channel === conn2.channel) {
+          commonChannel = conn1.channel;
+
+          // Add a new message to the chat array
+          console.log("conn1", conn1);
+          console.log("conn2", conn2);
+
+          conn1.chat.push({
+            senderId: existUser._id,
+            receiverId: userToConnect._id,
+            content: messageContent,
+          });
+
+          conn2.chat.push({
+            senderId: existUser._id,
+            receiverId: userToConnect._id,
+            content: messageContent,
+          });
+
+          break;
+        }
+      }
+      if (commonChannel) {
+        break;
+      }
+    }
+
+    if (!commonChannel) {
       return Response.json({
-        message: "Connection not found",
+        message: "Common channel not found",
         status: 404,
       });
     }
-    connectionToModify2.chat.push({
-      senderId: existUser._id,
-      receiverId: userToConnect._id,
-      content: messageContent,
-    });
-    connectionToModify.chat.push({
-      senderId: existUser._id,
-      receiverId: userToConnect._id,
-      content: messageContent,
-    });
 
     await existUser.save();
     await userToConnect.save();

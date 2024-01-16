@@ -10,69 +10,11 @@ import { login } from "@/app/rtk/authSlice";
 import Link from "next/link";
 
 const Page = () => {
-  // const [users, setUsers] = useState([]);
-  // const handleGetUsers = async () => {
-  //   try {
-  //     const res = await getAllUsers();
-  //     if (res.status === 200) {
-  //       setUsers(res.data);
-  //     }
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // };
-  // useEffect(() => {
-  //   handleGetUsers();
-  // }, []);
-  // const [chats, setChats] = useState([
-  //   {
-  //     id: 1,
-  //     user: {
-  //       id: 1,
-  //       name: "Ahmed",
-  //       image: userImage,
-  //     },
-  //     messages: [
-  //       { id: 1, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 2, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 3, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 4, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 5, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 6, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 7, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 8, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 9, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 10, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 11, senderName: "John Doe", message: "Hello there!" },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     user: {
-  //       id: 2,
-  //       name: "Omar",
-  //       image: userImage,
-  //     },
-  //     messages: [
-  //       { id: 1, senderName: "Omar", message: "Hello there!" },
-  //       { id: 2, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 3, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 4, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 5, senderName: "Omar", message: "Hello there!" },
-  //       { id: 6, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 8, senderName: "Omar", message: "Hello there!" },
-  //       { id: 9, senderName: "Omar ", message: "Hello there!" },
-  //       { id: 10, senderName: "John Doe", message: "Hello there!" },
-  //       { id: 11, senderName: "Omar", message: "Hello there!" },
-  //       { id: 12, senderName: "John Doe", message: "Hello there!" },
-  //     ],
-  //   },
-  //   // Add more chats as needed
-  // ]);
   const userr = useSelector((state) => state.auth.user?.user);
   const [selectedChat, setSelectedChat] = useState(
     userr?.acceptedConnections[0]
   );
+  const [channel, setChannel] = useState("");
   const [socket, setSocket] = useState(null);
   const [sendMessage, setSendMessage] = useState("");
   const [openMessage, setOpenMessage] = useState(false);
@@ -83,7 +25,6 @@ const Page = () => {
     }
   }, [selectedChat]);
   const dispatch = useDispatch();
-  console.log(selectedChat?.chat);
   const loginUser = async () => {
     try {
       await dispatch(login()).then((data) => {
@@ -94,38 +35,70 @@ const Page = () => {
       console.error("Error logging in:", error);
     }
   };
+  useEffect(() => {
+    if (selectedChat?.chat?.length > 0) {
+      setMessages([...selectedChat?.chat]);
+    } else {
+      setMessages([]); // Clear messages when there is no chat in selectedChat
+    }
+  }, [selectedChat]);
+
+  useEffect(() => {
+    const userConnection = userr?.acceptedConnections?.find(
+      (conn) =>
+        (conn?.receiverId === selectedChat?.receiverId &&
+          conn?.requesterId === selectedChat?.requesterId) ||
+        (conn?.requesterId === selectedChat?.receiverId &&
+          conn?.receiverId === selectedChat?.requesterId)
+    );
+
+    if (selectedChat?.channel === userConnection?.channel) {
+      setChannel(selectedChat?.channel);
+    }
+  }, [selectedChat]);
   const handleSendMessage = async () => {
-    if (socket !== null) {
-      socket.emit(
-        "send message",
-        sendMessage,
-        selectedChat?.receiverId === userr?._id
-          ? selectedChat?.requesterId
-          : selectedChat?.receiverId
-      );
-      try {
-        const res = await sendMessageToBE(
-          selectedChat?.receiverId === userr?._id
-            ? selectedChat?.requesterId
-            : selectedChat?.receiverId,
-          sendMessage
-        );
-      } catch (error) {
-        throw error;
+    if (channel) {
+      if (socket !== null) {
+        socket.emit("send message", {
+          sendMessage: sendMessage,
+          channel: channel,
+          receiverId:
+            selectedChat?.receiverId === userr?._id
+              ? selectedChat?.requesterId
+              : selectedChat?.receiverId,
+        });
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            senderId: userr?._id,
+            content: sendMessage,
+            receiverId: selectedChat?.receiverId,
+          },
+        ]);
+        setSendMessage("");
+        try {
+          const res = await sendMessageToBE(
+            selectedChat?.receiverId === userr?._id
+              ? selectedChat?.requesterId
+              : selectedChat?.receiverId,
+            sendMessage
+          );
+        } catch (error) {
+          throw error;
+        }
+
+        // setTimeout(async () => {
+        //   await loginUser();
+        // }, 500);
       }
-      setMessages((prev) => [
-        ...prev,
-        {
-          senderId: userr?._id,
-          content: sendMessage,
-        },
-      ]);
-      setSendMessage("");
-      // setTimeout(async () => {
-      //   await loginUser();
-      // }, 500);
     }
   };
+  useEffect(() => {
+    if (openMessage === false) {
+      setChannel(userr?._id);
+    }
+  }, [openMessage]);
   const handleOpenMessage = (chat) => {
     setSelectedChat(chat);
     setOpenMessage(true);
@@ -133,7 +106,7 @@ const Page = () => {
 
   useEffect(() => {
     const newSocket = io("https://linkedin-websockets.onrender.com", {
-      query: { id: userr?._id },
+      query: { id: channel },
     });
     setSocket(newSocket);
     newSocket.on("connected", () => {
@@ -141,23 +114,41 @@ const Page = () => {
     });
     newSocket.on("received message", (message) => {
       console.log(message);
+      console.log(selectedChat?.requesterId, userr?._id);
       setMessages((prev) => [
         ...prev,
         {
-          sender: selectedChat?.firstName,
+          senderId: selectedChat?.requesterId,
           content: message,
+          receiverId: userr?._id,
         },
       ]);
-      // setTimeout(async () => {
-      //   await loginUser();
-      // }, 500);
+      // updateFilterdMessages();
+
       // You may want to update the state and perform other actions here
     });
     return () => {
       newSocket.disconnect();
     };
-  }, [userr, messages]);
+  }, [userr, messages, channel]);
+
+  const [filterdMessages, setFilterdMessages] = useState([]);
+  const updateFilterdMessages = () => {
+    const updatedFilterdMessages = messages.filter((message) =>
+      selectedChat?.chat.some(
+        (chatMessage) =>
+          (message?.receiverId === chatMessage?.receiverId &&
+            message?.senderId === chatMessage?.senderId) ||
+          (message?.senderId === chatMessage?.receiverId &&
+            message?.receiverId === chatMessage?.senderId)
+      )
+    );
+    setFilterdMessages(updatedFilterdMessages);
+  };
+
+  console.log(filterdMessages);
   console.log(messages);
+
   return (
     <>
       <div className="hidden md:flex flex-col px-3 mt-24">

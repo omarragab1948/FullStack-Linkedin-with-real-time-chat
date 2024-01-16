@@ -1,6 +1,7 @@
 import connectToMongoDB from "@/app/utils/connectDB";
 import { verifyToken } from "@/app/utils/handleToken";
 import { User } from "@/app/utils/models";
+import { v4 as uuidv4 } from "uuid";
 
 export const POST = async (request) => {
   const { userIdToConnect } = await request.json();
@@ -60,10 +61,12 @@ export const POST = async (request) => {
 
     const existingConnection = existUser?.acceptedConnections?.find(
       (conn) =>
-        conn.receiverId === userIdToConnect?.receiverId ||
-        conn.requesterId === userIdToConnect?.requesterId
+        (conn?.receiverId === userIdToConnect?.receiverId &&
+          conn?.requesterId === userIdToConnect?.requesterId) ||
+        (conn?.requesterId === userIdToConnect?.receiverId &&
+          conn?.receiverId === userIdToConnect?.requesterId)
     );
-
+    console.log(existingConnection);
     if (!existingConnection) {
       if (!userToConnect) {
         return Response.json({
@@ -72,6 +75,7 @@ export const POST = async (request) => {
         });
       }
 
+      const channel = uuidv4();
       userToConnect.acceptedConnections.push({
         receiverId: userToConnect?._id,
         requesterId: existUser?._id,
@@ -86,6 +90,7 @@ export const POST = async (request) => {
         requesterFirstName: existUser?.firstName,
         requesterLastName: existUser?.lastName,
         requesterTitle: existUser?.title,
+        channel,
       });
 
       await userToConnect.save();
@@ -104,11 +109,12 @@ export const POST = async (request) => {
         requesterFirstName: existUser?.firstName,
         requesterLastName: existUser?.lastName,
         requesterTitle: existUser?.title,
+        channel,
       });
 
       await existUser.save();
-      console.log("existUser: " + existUser);
-      console.log("userToConnect: " + userToConnect);
+      console.log("existUser: ", existUser);
+      console.log("userToConnect: ", userToConnect);
 
       return Response.json({ data: existUser, status: 200 });
     } else {

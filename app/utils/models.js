@@ -187,6 +187,10 @@ const acceptedConnectionSchema = new mongoose.Schema({
     type: String,
   },
   chat: [messageSchema],
+  channel: {
+    type: String,
+    required: true,
+  },
 });
 const userSchema = new mongoose.Schema({
   backgroundImage: {

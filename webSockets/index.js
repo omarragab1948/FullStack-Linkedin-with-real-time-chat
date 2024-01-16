@@ -23,11 +23,14 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   const id = socket.handshake.query.id;
   socket.join(id);
-  socket.on("send message", (message, roomId) => {
-    console.log("room", roomId);
-    console.log("message", message);
+  console.log("id", id);
 
-    socket.to(roomId).emit("received message", message);
+  socket.on("send message", ({ sendMessage, channel, receiverId }) => {
+    // console.log("id", id);
+    console.log("receiver", receiverId);
+
+    socket.to(channel).emit("received message", sendMessage);
+    socket.to(receiverId).emit("received message", sendMessage);
   });
 
   socket.on("send connect", (receiver, sender) => {
