@@ -122,7 +122,7 @@ const Header = () => {
         id.length < 25
       ) {
         setOnlineUsers((prevUsers) => {
-          const newOnlineUsers = Array.from(new Set([...prevUsers, id]));
+          const newOnlineUsers = Array.from(new Set([...prevUsers, id])); // Use Set to keep unique values
           localStorage.setItem("onlineUsers", JSON.stringify(newOnlineUsers));
           return newOnlineUsers;
         });
