@@ -4,6 +4,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -49,8 +50,6 @@ const Page = () => {
 
   return (
     <>
-      <ToastContainer />
-
       <div className=" w-4/5 md:w-1/2 p-4 rounded-md dark:bg-darkbg shadow-xl mt-24 mx-auto">
         <div className=" relative p-4 rounded-md  mb-4 flex flex-col items-start">
           <div className="mr-4 flex items-center">
