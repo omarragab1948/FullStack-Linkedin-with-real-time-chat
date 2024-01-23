@@ -25,7 +25,6 @@ const RightSide = () => {
   const sendConnectToSocket = async (item) => {
     if (socket !== null) {
       socket.emit("send connect", item, userr);
-      // toast.success(`You send a new connect request to ${item?.firstName}`);
       setTimeout(async () => {
         await loginUser();
       }, 1000);

@@ -457,7 +457,7 @@ const page = () => {
             className="flex  items-start justify-center w-full mb-4"
           >
             <Image
-              src={user?.image || userImage}
+              src={user?.profileImage || userImage}
               alt={user?.firstName}
               className="w-10 h-10 rounded-full mb-2"
               width={1500}
