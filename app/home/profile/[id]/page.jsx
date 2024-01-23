@@ -12,7 +12,7 @@ import { getAllUsers, getUserProfile } from "@/app/services/apiHandler";
 import { usePathname } from "next/navigation";
 import { FaArrowRight } from "react-icons/fa";
 import UpdateInfoPopup from "@/app/components/UpdateInfoPopup";
-import ContactPopup from "@/app/components/contactPopup";
+import ContactPopup from "../../../components/ContactPopup";
 
 const page = () => {
   const [show, setShow] = useState(false);
