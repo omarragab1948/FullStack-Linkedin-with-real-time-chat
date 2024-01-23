@@ -8,29 +8,29 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://full-stack-linkedin-with-real-time-chat.vercel.app",
   })
 );
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://full-stack-linkedin-with-real-time-chat.vercel.app",
     methods: ["GET", "POST"],
   },
 });
 
 io.on("connection", (socket) => {
   const id = socket.handshake.query.id;
+  io.emit("user online", id);
   socket.join(id);
-  console.log("id", id);
 
-  socket.on("send message", ({ sendMessage, channel, receiverId }) => {
-    // console.log("id", id);
-    console.log("receiver", receiverId);
-
-    socket.to(channel).emit("received message", sendMessage);
-    socket.to(receiverId).emit("received message", sendMessage);
+  socket.on("send message", ({ sendMessage, channel, sender, receiver }) => {
+    socket.broadcast.to(channel).emit("received message", sendMessage, sender);
+    socket.to(receiver).emit("new message", "new message");
+  });
+  socket.on("send notification", (channel) => {
+    socket.to(channel).emit("received notification", "received notification");
   });
 
   socket.on("send connect", (receiver, sender) => {
@@ -47,6 +47,12 @@ io.on("connection", (socket) => {
     socket.broadcast
       .to(receiver?.requesterId)
       .emit("connect rejected", receiver);
+  });
+  socket.on("user offline", (id) => {
+    socket.broadcast.emit("user offline", id);
+  });
+  socket.on("disconnect", () => {
+    io.emit("user offline", id);
   });
 });
 

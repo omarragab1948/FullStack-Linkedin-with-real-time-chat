@@ -57,7 +57,6 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
     setImageShow(false);
     setImgUrl("");
   };
-  console.log(typeImage);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,9 +65,7 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
     if (srcImage) {
       if (typeImage === "Background photo") {
         formData.set("backgroundImage", srcImage);
-        console.log(formData);
         const res = await updateUserImages(formData);
-        console.log(res);
         if (res.status === 200) {
           dispatch(login(res.data));
           typeof window !== "undefined" &&
@@ -79,11 +76,9 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
         }
       } else {
         formData.set("profileImage", srcImage);
-        console.log(formData);
 
         const res = await updateUserImages(formData);
-        console.log(res.data);
-        console.log(res);
+
         if (res.status === 200) {
           dispatch(login(res.data));
           typeof window !== "undefined" &&
@@ -132,12 +127,14 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
     <>
       {updateImage && (
         <div className=" fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-          <div className="menu-container bg-slate-200 flex flex-col justify-between rounded-lg overflow-hidden w-11/12 md:w-1/2 h-4/5">
+          <div className="menu-container dark:bg-darkbg bg-slate-200 flex flex-col justify-between rounded-lg overflow-hidden w-11/12 md:w-1/2 h-4/5">
             <div className="py-2 px-3 flex w-full  justify-start relative items-center">
-              <span className="text-xl font-semibold">{typeImage} </span>
+              <span className="text-xl font-semibold dark:text-darkmaintext">
+                {typeImage}{" "}
+              </span>
               <button
                 onClick={() => setUpdateImage(false)}
-                className="text-2xl absolute top-2 right-2"
+                className="text-2xl absolute top-2 right-2 dark:text-darkmaintext"
               >
                 <IoCloseSharp />
               </button>
@@ -154,7 +151,7 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
                       typeImage === "Background photo"
                         ? "w-full"
                         : "w-64 rounded-full"
-                    } mx-auto  h-64 border border-slate-300 border-solid`}
+                    } mx-auto  h-64 `}
                   />
                 </div>
               ) : (
@@ -172,7 +169,7 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
                       typeImage === "Background photo"
                         ? "w-full"
                         : "w-64 rounded-full"
-                    } mx-auto  h-64 border border-slate-300 border-solid`}
+                    } mx-auto  h-64 `}
                   />
                 </div>
               )}
@@ -182,7 +179,7 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
                 spinner ? "opacity-1" : "opacity-0"
               } border-gray-400 border-t-blue-500  rounded-full w-10 h-10 animate-spin`}
             ></div>
-            <div className="flex overflow-auto justify-between flex-col pb-2 pr-3 bg-f7f7f7">
+            <div className="flex overflow-auto justify-between flex-col pb-2 pr-3 ">
               <div className="flex items-center justify-between ">
                 <div className="flex ml-4">
                   <button
@@ -199,7 +196,7 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
                     <p className="my-2">
                       <label
                         htmlFor="file"
-                        className="label-btn=  text-white p-2 rounded cursor-pointer"
+                        className=" text-white p-2 rounded cursor-pointer"
                       >
                         <img
                           src="/images/share-image.svg"
@@ -220,7 +217,9 @@ const UpdateImagePopup = ({ updateImage, setUpdateImage, typeImage }) => {
                   <button
                     disabled={!srcImage}
                     className={`py-1 rounded-full px-4 mx-2 font-bold ${
-                      !srcImage ? "" : "bg-blue-600 text-white "
+                      !srcImage
+                        ? "dark:text-darkmaintext"
+                        : "bg-blue-600 text-white "
                     }`}
                     type="button"
                     onClick={handleSubmit}

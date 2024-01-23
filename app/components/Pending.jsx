@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import userImage from "@/public/images/user.svg";
@@ -6,7 +8,7 @@ import { acceptConnect, rejectConnect } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const Pending = ({ user }) => {
   const [socket, setSocket] = useState(null);
@@ -14,7 +16,7 @@ const Pending = ({ user }) => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const newSocket = io("https://linkedin-websockets.onrender.com", {
+    const newSocket = io("http://localhost:3001", {
       query: { id: user?._id },
     });
     setSocket(newSocket);
@@ -89,7 +91,7 @@ const Pending = ({ user }) => {
         user?.pendingConnections.map((item, i) => (
           <div
             key={i}
-            className="text-center hover:scale-105 rounded-t-xl overflow-hidden rounded pb-3 w-4/5 sm:w-3/5 my-3 lg:w-1/4 mx-2 duration-300 border border-solid border-slate-300 hover:bg-slate-300"
+            className="text-center dark:border-darkborder hover:scale-105 rounded-t-xl overflow-hidden rounded pb-3 w-4/5 sm:w-3/5 my-3 lg:w-1/4 mx-2 duration-300 border border-solid border-slate-300 dark:hover:bg-darkbg hover:bg-slate-300"
           >
             <div className="w-full">
               {item?.receiverBackgroundImage ? (
@@ -127,17 +129,19 @@ const Pending = ({ user }) => {
                 />
               )}
             </div>
-            <div className="font-semibold flex justify-center relative bottom-6 text-base leading-normal text-black  opacity-90">
+            <div className="font-semibold flex dark:text-darkmaintext justify-center relative bottom-6 text-base leading-normal text-black  opacity-90">
               {item?.receiverId === user?._id ? (
                 <span>{item?.requesterFirstName} </span>
               ) : (
                 <span>{item?.receiverFirstName} </span>
               )}
             </div>
-            <div className="font-normal flex justify-center relative bottom-6 text-md leading-snug mt-1">
+            <div className="font-normal dark:text-darksecondtext flex justify-center relative bottom-6 text-md leading-snug mt-1">
               Front-End
             </div>
-            {item?.requesterId === user?._id && <span>Pending</span>}
+            {item?.requesterId === user?._id && (
+              <span className="dark:text-darkmaintext">Pending</span>
+            )}
             {item?.receiverId === user?._id && (
               <div className="flex items-center justify-around">
                 <button
@@ -157,7 +161,7 @@ const Pending = ({ user }) => {
           </div>
         ))
       ) : (
-        <span>No pending connections</span>
+        <span className="dark:text-darkmaintext">No pending connections</span>
       )}
     </>
   );

@@ -1,5 +1,5 @@
 import { verifyToken } from "@/app/utils/handleToken";
-import { User } from "@/app/utils/models";
+import { Post, User } from "@/app/utils/models";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../../../utils/firebase";
@@ -44,11 +44,28 @@ export const POST = async (request) => {
         const downloadURL = await getDownloadURL(imageRef);
 
         if (fieldName === "backgroundImage") {
-          console.log(fieldName);
           existUser.backgroundImage = downloadURL;
-          console.log(existUser);
         } else if (fieldName === "profileImage") {
           existUser.profileImage = downloadURL;
+          const userPosts = await Post.find({
+            autherId: existUser._id.toString(),
+          });
+          for (const post of userPosts) {
+            if (post?.autherId === existUser?._id.toString()) {
+              post.autherImage = downloadURL;
+              await post.save();
+            }
+          }
+          const reposts = await Post.find({
+            "repost.originalUserId": existUser._id.toString(),
+          });
+
+          for (const post of reposts) {
+            if (post?.repost?.originalUserId === existUser?._id.toString()) {
+              post.repost.originalUserImage = downloadURL;
+              await post.save();
+            }
+          }
         }
 
         const updatedUser = await existUser.save();

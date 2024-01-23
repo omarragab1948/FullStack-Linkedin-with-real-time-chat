@@ -1,61 +1,3 @@
-// import connectToMongoDB from "@/app/utils/connectDB";
-// import { handleToken } from "@/app/utils/handleToken";
-// import { User } from "@/app/utils/models";
-// import bcrypt from "bcryptjs";
-// import { NextResponse } from "next/server";
-
-// export const POST = async (request) => {
-//   try {
-//     const { email, password, google } = await request.json();
-
-//     // Validate email and password
-//     if (!email || !password) {
-//       const response = Response.json({
-//         error: "Invalid email or password",
-//         status: 400,
-//       });
-//       return response;
-//     }
-//     connectToMongoDB();
-
-//     const existedUser = await User.findOne({ email: email });
-//     if (!existedUser) {
-//       return Response.json({ error: "User doesn't exist", status: 404 });
-//     }
-//     // Compare the provided password with the hashed password
-//     const passwordMatch = await bcrypt.compare(password, existedUser.password);
-
-//     if (!passwordMatch) {
-//       const response = Response.json({
-//         error: "Invalid email or password",
-//         status: 401,
-//       });
-//       return response;
-//     }
-//     const token = await handleToken(existedUser._id);
-//     const data = {
-//       user: existedUser,
-//       token,
-//     };
-//     const response = NextResponse.json({
-//       message: "Login successful",
-//       data,
-//       status: 200,
-//     });
-//     response.cookies.set({ name: "token", value: token });
-
-//     return response;
-//   } catch (error) {
-//     console.error("Error during login:", error);
-
-//     // Respond with an error status and message
-//     const response = Response.json({
-//       error: "Error during login",
-//       status: 500,
-//     });
-//     return response;
-//   }
-// };
 import connectToMongoDB from "@/app/utils/connectDB";
 import { handleToken } from "@/app/utils/handleToken";
 import { User } from "@/app/utils/models";
@@ -64,7 +6,7 @@ import bcrypt from "bcryptjs";
 
 export const POST = async (request) => {
   try {
-    const { email, password, google, profileImage, firstName } =
+    const { email, password, google, profileImage, firstName, lastName } =
       await request.json();
 
     // Validate email and password for non-Google login
@@ -74,7 +16,6 @@ export const POST = async (request) => {
         status: 400,
       });
     }
-    console.log(email, password, google);
     connectToMongoDB();
 
     let existedUser;
@@ -82,14 +23,48 @@ export const POST = async (request) => {
     if (google) {
       // Handle Google sign-in without password
       existedUser = await User.findOne({ email });
+      console.log(existedUser);
+
       if (!existedUser) {
         // If the user doesn't exist, create a new user with Google information
         existedUser = await User.create({
           email,
           profileImage,
           firstName,
+          status: "online",
+          lastName,
           // Add other Google-related fields if needed
         });
+      } else {
+        for (const connection of existedUser?.acceptedConnections) {
+          if (connection?.receiverId === existedUser?._id.toString()) {
+            const connectedUser = await User.findById(connection?.requesterId);
+            for (const connectionTo of connectedUser?.acceptedConnections) {
+              if (
+                connectionTo?.receiverId === existedUser?._id.toString() &&
+                connectionTo?.requesterId === connectedUser?._id.toString()
+              ) {
+                connection.receiverStatus = "online";
+                connectionTo.receiverStatus = "online";
+                await existedUser.save();
+                await connectedUser.save();
+              }
+            }
+          } else if (connection?.requesterId === existedUser?._id.toString()) {
+            const connectedUser = await User.findById(connection?.receiverId);
+            for (const connectionTo of connectedUser?.acceptedConnections) {
+              if (
+                connectionTo?.requesterId === existedUser?._id.toString() &&
+                connectionTo?.receiverId === connectedUser?._id.toString()
+              ) {
+                connection.requesterStatus = "online";
+                connectionTo.requesterStatus = "online";
+                await existedUser.save();
+                await connectedUser.save();
+              }
+            }
+          }
+        }
       }
     } else {
       // Handle regular email/password login
@@ -97,21 +72,52 @@ export const POST = async (request) => {
       if (!existedUser) {
         return NextResponse.json({ error: "User doesn't exist", status: 404 });
       }
-
-      // Compare the provided password with the hashed password
-      const passwordMatch = await bcrypt.compare(
-        password,
-        existedUser.password
-      );
-
-      if (!passwordMatch) {
-        return NextResponse.json({
-          error: "Invalid email or password",
-          status: 401,
-        });
+      if (password) {
+        const passwordMatch = await bcrypt.compare(
+          password,
+          existedUser.password
+        );
+        if (!passwordMatch) {
+          return NextResponse.json({
+            error: "Invalid email or password",
+            status: 401,
+          });
+        }
       }
-    }
+      // Compare the provided password with the hashed password
 
+      for (const connection of existedUser?.acceptedConnections) {
+        if (connection?.receiverId === existedUser?._id.toString()) {
+          const connectedUser = await User.findById(connection?.requesterId);
+          for (const connectionTo of connectedUser?.acceptedConnections) {
+            if (
+              connectionTo?.receiverId === existedUser?._id.toString() &&
+              connectionTo?.requesterId === connectedUser?._id.toString()
+            ) {
+              connection.receiverStatus = "online";
+              connectionTo.receiverStatus = "online";
+              await existedUser.save();
+              await connectedUser.save();
+            }
+          }
+        } else if (connection?.requesterId === existedUser?._id.toString()) {
+          const connectedUser = await User.findById(connection?.receiverId);
+          for (const connectionTo of connectedUser?.acceptedConnections) {
+            if (
+              connectionTo?.requesterId === existedUser?._id.toString() &&
+              connectionTo?.receiverId === connectedUser?._id.toString()
+            ) {
+              connection.requesterStatus = "online";
+              connectionTo.requesterStatus = "online";
+              await existedUser.save();
+              await connectedUser.save();
+            }
+          }
+        }
+      }
+      existedUser.status = "online";
+      await existedUser.save();
+    }
     // Generate token and prepare response
     const token = await handleToken(existedUser._id);
     const data = {

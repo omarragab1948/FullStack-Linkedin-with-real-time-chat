@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth, googleProvider } from "./utils/firebase";
-import { signIn, signUp } from "./services/apiHandler";
+import { signIn } from "./services/apiHandler";
 import { useDispatch } from "react-redux";
 import { login } from "./rtk/authSlice";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,8 @@ export default function Home() {
         const user = result.user;
 
         const userData = {
-          firstName: user.displayName,
+          firstName: user.displayName.split(" ")[0],
+          lastName: user.displayName.split(" ")[1],
           email: user.email,
           profileImage: user.photoURL,
           google: true,

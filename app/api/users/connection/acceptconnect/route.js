@@ -91,6 +91,8 @@ export const POST = async (request) => {
         requesterLastName: existUser?.lastName,
         requesterTitle: existUser?.title,
         channel,
+        receiverStatus: "online",
+        requesterStatus: "online",
       });
 
       await userToConnect.save();
@@ -110,11 +112,11 @@ export const POST = async (request) => {
         requesterLastName: existUser?.lastName,
         requesterTitle: existUser?.title,
         channel,
+        receiverStatus: "online",
+        requesterStatus: "online",
       });
 
       await existUser.save();
-      console.log("existUser: ", existUser);
-      console.log("userToConnect: ", userToConnect);
 
       return Response.json({ data: existUser, status: 200 });
     } else {

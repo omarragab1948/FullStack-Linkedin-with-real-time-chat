@@ -1,8 +1,6 @@
 "use client";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import share from "@/public/images/shared-image.jpg";
-import Image from "next/image";
+
 import { connect, getAllUsers } from "@/app/services/apiHandler";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/app/rtk/authSlice";
@@ -30,8 +28,6 @@ const Page = () => {
       console.log("connected");
     });
 
-    newSocket.on("send connect", (message) => {});
-
     return () => {
       newSocket.disconnect();
     };
@@ -50,7 +46,6 @@ const Page = () => {
   const sendConnectToSocket = async (item) => {
     if (socket !== null) {
       socket.emit("send connect", item, user);
-      // toast.success(`You send a new connect request to ${item?.firstName}`);
       setTimeout(async () => {
         await loginUser();
       }, 1000);
@@ -96,10 +91,19 @@ const Page = () => {
           conn?.receiverId === item?._id || conn?.requesterId === item?._id
       )
   );
+  if (status === "loading" || status === "idle") {
+    return (
+      <div className="w-full flex justify-center  dark:bg-black z-50 mt-80 items-center h-full absolute top-0 left-0 bg-white">
+        <div
+          className={`border-4 my-2 border-solid mr-3  border-gray-400 border-t-blue-500 rounded-full w-12 h-12 animate-spin`}
+        ></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container flex flex-col   mx-auto py-4 px-16 mt-20 ">
-      <div className="w-full flex flex-col sm:flex-row justify-around  border border-solid  border-slate-300 py-4 px-3">
+    <div className="container flex flex-col  mx-auto py-4 px-16 mt-20 ">
+      <div className="w-full flex dark:bg-darkbg  flex-col sm:flex-row justify-around  border border-solid dark:border-darkborder border-slate-300 py-4 px-3">
         <button
           onClick={() => setSelectedTab("recommendations")}
           className={`flex items-center justify-between font-extrabold  py-3 text-blue-600  ${
@@ -177,7 +181,7 @@ const Page = () => {
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center my-4  w-full   border border-slate-300 border-solid py-3 px-8">
+      <div className="flex dark:bg-darkbg dark:border-darkborder flex-wrap items-center justify-center my-4  w-full   border border-slate-300 border-solid py-3 px-8">
         {selectedTab === "recommendations" && (
           <Recommendations
             user={user}

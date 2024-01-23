@@ -38,6 +38,20 @@ export const addPost = async (post) => {
     throw e;
   }
 };
+export const sharePost = async (post) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
+    const res = await axios.post("/api/posts/sharepost", post, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
 export const getAllPosts = async () => {
   try {
     const res = await axios.get("/api/posts/getallposts");
@@ -64,6 +78,44 @@ export const getAllUsers = async () => {
 export const getUser = async () => {
   try {
     const res = await axios.get("/api/users/getuser");
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const getUserProfile = async (userId) => {
+  const id = {
+    id: userId,
+  };
+  console.log(id);
+  const token = JSON.parse(localStorage.getItem("user")).token;
+
+  try {
+    const res = await axios.post("/api/users/getprofiledata", id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const searchUsers = async (name) => {
+  const id = {
+    name,
+  };
+  console.log(id);
+  const token = JSON.parse(localStorage.getItem("user")).token;
+
+  try {
+    const res = await axios.post("/api/users/search", id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return res.data;
   } catch (e) {
@@ -324,6 +376,137 @@ export const sendMessageToBE = async (id, messageContent) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const likePost = async (like) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+
+    const res = await axios.post("/api/posts/likepost", like, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const commentPost = async (comment) => {
+  console.log(comment);
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+
+    const res = await axios.post("/api/posts/commentpost", comment, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const addJob = async (job) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+
+    const res = await axios.post("/api/jobs/addjob", job, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const getAllJobs = async () => {
+  try {
+    const res = await axios.get("/api/jobs/getalljobs");
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const getJob = async (jobId) => {
+  const id = {
+    id: jobId,
+  };
+  console.log(id);
+  const token = JSON.parse(localStorage.getItem("user")).token;
+
+  try {
+    const res = await axios.post("/api/jobs/getjob", id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const changeMode = async (mode) => {
+  const modeToChange = {
+    mode,
+  };
+  console.log(mode);
+  const token = JSON.parse(localStorage.getItem("user")).token;
+
+  try {
+    const res = await axios.post("/api/users/mode", modeToChange, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const changeInfo = async (info) => {
+  const information = {
+    firstName: info.firstName,
+    lastName: info.lastName,
+    emailToContact: info.emailToContact,
+    country: info.country,
+    title: info.title,
+  };
+  const token = JSON.parse(localStorage.getItem("user")).token;
+
+  try {
+    const res = await axios.post("/api/users/info", information, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+export const changeContact = async (contact) => {
+  const contentInfo = {
+    website: contact.website,
+    phone: contact.phone,
+    emailToContact: contact.emailToContact,
+  };
+  const token = JSON.parse(localStorage.getItem("user")).token;
+
+  try {
+    const res = await axios.post("/api/users/contactinfo", contentInfo, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     return res.data;
   } catch (e) {
     throw e;

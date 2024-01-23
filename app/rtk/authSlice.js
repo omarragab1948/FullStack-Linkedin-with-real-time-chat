@@ -1,18 +1,16 @@
-// authSlice.js
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getUser, signIn } from "../services/apiHandler"; // Assuming you have an API service function
+import { getUser } from "../services/apiHandler";
 
 const initialState = {
   user: null,
-  status: "idle", // idle | loading | succeeded | failed
+  status: "idle",
   error: null,
 };
 
 export const login = createAsyncThunk("auth/users/getuser", async () => {
   try {
     const response = await getUser();
-    return response.data; // Assuming the API response has a 'data' field containing user information
+    return response.data;
   } catch (error) {
     throw error;
   }

@@ -1,11 +1,6 @@
 import { verifyToken } from "@/app/utils/handleToken";
 import { Post, User } from "@/app/utils/models";
-import {
-  uploadBytes,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../../../utils/firebase";
 import connectToMongoDB from "@/app/utils/connectDB";
@@ -48,9 +43,7 @@ export const POST = async (request) => {
         status: 400,
       });
     }
-    console.log();
     existUser.posts.push(createdPost);
-    console.log(existUser);
 
     const user = await existUser.save();
 
@@ -80,7 +73,7 @@ export const POST = async (request) => {
         content,
         image: downloadURL,
         autherImage: existUser.profileImage,
-        autherTitle: "Front End",
+        autherTitle: existUser.title,
       };
 
       return await connectAndCreatePost(postWithImage);
@@ -97,9 +90,9 @@ export const POST = async (request) => {
       firstName: existUser.firstName,
       lastName: existUser.lastName,
       content,
-      autherTitle: "Front End",
+      autherImage: existUser.profileImage,
+      autherTitle: existUser.title,
     };
-    console.log(postWithoutImage);
     return await connectAndCreatePost(postWithoutImage);
   }
 };

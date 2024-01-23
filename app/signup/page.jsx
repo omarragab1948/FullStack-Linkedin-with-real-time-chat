@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "/public/images/login-logo.svg";
 import Link from "next/link";
 import { signIn, signUp } from "../services/apiHandler";
@@ -34,12 +34,17 @@ const SignUp = () => {
   const handleInput = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
   };
-
+  useEffect(() => {
+    setEr({
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+    });
+  }, [userInfo]);
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setSpinner(true);
 
-    // Clear previous errors
     setEr({
       email: "",
       password: "",
@@ -47,25 +52,18 @@ const SignUp = () => {
       lastName: "",
     });
 
-    // Validate first name
     if (userInfo.firstName.trim() === "") {
       setEr((prev) => ({ ...prev, firstName: "First name cannot be empty" }));
-      return;
     }
 
-    // Validate last name
     if (userInfo.lastName.trim() === "") {
       setEr((prev) => ({ ...prev, lastName: "Last name cannot be empty" }));
-      return;
     }
 
-    // Validate email
     if (!emailRegex.test(userInfo.email)) {
       setEr((prev) => ({ ...prev, email: "Invalid email format" }));
-      return;
     }
 
-    // Validate password
     if (!passwordRegex.test(userInfo.password)) {
       setEr((prev) => ({
         ...prev,
@@ -75,7 +73,10 @@ const SignUp = () => {
     }
 
     try {
+      setSpinner(true);
+
       const res = await signUp(userInfo);
+
       if (res.status === 201) {
         router.push("/signin");
         setSpinner(false);
@@ -83,19 +84,23 @@ const SignUp = () => {
         toast.error(res.error);
         setSpinner(false);
       }
-      console.log(res);
-    } catch (e) {}
+    } catch (e) {
+      setSpinner(false);
+
+      throw e;
+    }
   };
   const handleGoogle = () => {
-    setSpinner(true);
-
     signInWithPopup(auth, googleProvider)
       .then(async (result) => {
+        setSpinner(true);
+
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
         const userData = {
-          firstName: user.displayName,
+          firstName: user.displayName.split(" ")[0],
+          lastName: user.displayName.split(" ")[1],
           email: user.email,
           profileImage: user.photoURL,
           google: true,
@@ -140,7 +145,13 @@ const SignUp = () => {
             placeholder="First Name"
             onChange={handleInput}
           />
-          {er?.firstName && <span>{er.firstName}</span>}
+          <span
+            className={`text-red-500 opacity-0 duration-300 ${
+              er.firstName && "opacity-100"
+            }`}
+          >
+            {er?.firstName}
+          </span>
           <input
             type="text"
             name="lastName"
@@ -148,8 +159,13 @@ const SignUp = () => {
             placeholder="Last Name"
             onChange={handleInput}
           />
-          {er?.lastName && <span>{er.lastName}</span>}
-
+          <span
+            className={`text-red-500 opacity-0 duration-300 ${
+              er.lastName && "opacity-100"
+            }`}
+          >
+            {er?.lastName}
+          </span>
           <input
             type="email"
             name="email"
@@ -157,8 +173,13 @@ const SignUp = () => {
             placeholder="Email"
             onChange={handleInput}
           />
-          {er?.email && <span>{er.email}</span>}
-
+          <span
+            className={`text-red-500 opacity-0 duration-300 ${
+              er.email && "opacity-100"
+            }`}
+          >
+            {er?.email}
+          </span>
           <input
             type="password"
             name="password"
@@ -166,8 +187,13 @@ const SignUp = () => {
             placeholder="Password"
             onChange={handleInput}
           />
-          {er?.password && <span>{er.password}</span>}
-
+          <span
+            className={`text-red-500 opacity-0 duration-300 ${
+              er.password && "opacity-100"
+            }`}
+          >
+            {er?.password}
+          </span>
           <button
             onClick={handleSignUp}
             className="signin w-full h-12 my-4 font-medium text-white rounded-full bg-blue-500 hover:bg-blue-700 duration-300"

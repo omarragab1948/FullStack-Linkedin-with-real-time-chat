@@ -157,12 +157,14 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
     <>
       {show && (
         <div className=" fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-          <div className="menu-container bg-slate-200  flex-col justify-between rounded-lg overflow-hidden w-11/12 sm:w-2/3 md:w-1/2 ">
+          <div className="menu-container dark:bg-darkbg bg-slate-200  flex-col justify-between rounded-lg overflow-hidden w-11/12 sm:w-2/3 md:w-1/2 ">
             <div className="py-2 px-3 flex w-full  justify-start relative items-center">
-              <span className="text-xl font-semibold">{type} </span>
+              <span className="text-xl font-semibold dark:text-darkmaintext">
+                {type}{" "}
+              </span>
               <button
                 onClick={handleShowProfilePopup}
-                className="text-2xl absolute top-2 right-2"
+                className="text-2xl absolute top-2 right-2 dark:text-darkmaintext"
               >
                 <IoCloseSharp />
               </button>
@@ -173,7 +175,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
                   value={editorText}
                   onChange={(e) => setEditorText(e.target.value)}
                   placeholder="What do you want to talk about?"
-                  className="p-2 w-full h-48 focus:border-none focus:outline-blue-500  bg-white"
+                  className="p-2 w-full h-48 focus:border-none focus:outline-blue-500 dark:bg-darkbg bg-white"
                 />
                 <div className="flex items-center">
                   <div
@@ -192,7 +194,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
                     disabled={editorText === ""}
                     className={`px-3 py-1 mt-3 ml-3 duration-300 ${
                       editorText === ""
-                        ? "text-black"
+                        ? "text-black dark:text-darksecondtext"
                         : "text-white bg-blue-600  rounded-full "
                     }`}
                   >
@@ -221,7 +223,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
                     >
                       <span
                         key={index}
-                        className="font-semibold opacity-80 text-md"
+                        className="font-semibold opacity-80 text-md dark:text-darkmaintext"
                       >
                         {skill.skill}
                       </span>
@@ -251,10 +253,10 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
                     ></div>
                     <button
                       onClick={handleAddSkill}
-                      disabled={addSkills === ""}
+                      disabled={addSkills.trim() === ""}
                       className={`px-3 py-1 mt-3 duration-300 ${
-                        addSkill === ""
-                          ? "text-black"
+                        addSkills === ""
+                          ? "text-black dark:text-darksecondtext"
                           : "text-white bg-blue-600  rounded-full "
                       }`}
                     >
@@ -307,7 +309,7 @@ const UpdateProfilePopup = ({ show, setShowProfilePop, type, update, id }) => {
                       disabled={addLanguages === ""}
                       className={`px-3 py-1 mt-3 duration-300 ${
                         addLanguages === ""
-                          ? "text-black"
+                          ? "text-black dark:text-darksecondtext"
                           : "text-white bg-blue-600  rounded-full "
                       }`}
                     >

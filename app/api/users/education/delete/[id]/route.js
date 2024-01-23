@@ -5,7 +5,6 @@ import { User } from "@/app/utils/models";
 export const DELETE = async (request) => {
   const educationId = new URL(request.url).pathname.split("/")[5];
 
-  console.log(educationId);
   const token = request.headers.get("Authorization");
   if (!token?.startsWith("Bearer ")) {
     return Response.json({

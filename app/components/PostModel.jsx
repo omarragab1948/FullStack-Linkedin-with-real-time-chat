@@ -4,6 +4,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../services/apiHandler";
 import { login } from "../rtk/authSlice";
+import Image from "next/image";
 
 const PostModel = ({ show, setShow, handlePostAdded }) => {
   const handleDocumentClick = (e) => {
@@ -77,29 +78,33 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
     <>
       {show && (
         <div className=" fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-          <div className="menu-container bg-white flex flex-col justify-between rounded-lg overflow-hidden w-11/12 md:w-1/2 h-3/5 md:h-4/5">
+          <div className="menu-container dark:bg-darkbg bg-white flex flex-col justify-between rounded-lg overflow-hidden w-11/12 md:w-1/2 h-4/5">
             <div className="py-2 px-3 flex w-full flex-col justify-between relative items-center">
               <div className="flex items-center w-full mt-2">
                 {user && user?.profileImage ? (
-                  <img
+                  <Image
                     src={user?.profileImage}
+                    width={1500}
+                    height={1500}
                     alt=""
                     className="rounded-full w-14 h-14 mr-2"
                   />
                 ) : (
-                  <img
+                  <Image
+                    width={1500}
+                    height={1500}
                     src="/images/user.svg"
                     className="rounded-full w-14 h-14 mr-2"
                     alt=""
                   />
                 )}
-                <span className="font-semibold text-xl leading-6 ml-2">
+                <span className="font-semibold text-xl leading-6 ml-2 dark:text-darkmaintext">
                   {user?.firstName} {user?.lastName}
                 </span>
               </div>
               <button
                 onClick={() => setShow(false)}
-                className="text-2xl absolute top-2 right-2"
+                className="text-2xl absolute top-2 right-2 dark:text-darkmaintext"
               >
                 <IoCloseSharp />
               </button>
@@ -108,11 +113,11 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
                   value={editorText}
                   onChange={(e) => setEditorText(e.target.value)}
                   placeholder="What do you want to talk about?"
-                  className="p-2 w-full h-48 focus:border-none focus:outline-none bg-white"
+                  className="p-2 w-full h-48 focus:border-none focus:outline-none bg-white dark:bg-darkbg dark:text-darkmaintext"
                 />
               </div>
             </div>
-            <div className="flex overflow-auto justify-between flex-col pb-2 pr-3 bg-f7f7f7">
+            <div className="flex overflow-auto justify-between flex-col pb-2 pr-3 ">
               <div className="flex justify-around items-center">
                 {imageShow && (
                   <div className="overflow-auto mx-auto px-3">
@@ -137,7 +142,13 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
               <div className="my-2 w-full text-center font-bold mx-auto">
                 {imgUrl && (
                   <div className="h-48 overflow-auto w-full px-3">
-                    <img src={`${imgUrl}`} alt="" />
+                    <Image
+                      src={`${imgUrl}`}
+                      alt=""
+                      width={1500}
+                      height={1500}
+                      className="w-full h-full"
+                    />
                   </div>
                 )}
               </div>
@@ -163,7 +174,9 @@ const PostModel = ({ show, setShow, handlePostAdded }) => {
                   <button
                     disabled={!editorText && !srcImage}
                     className={`py-1 rounded-full px-4 mr-4 font-bold ${
-                      !editorText && !srcImage ? "" : "bg-blue-500 text-white "
+                      !editorText && !srcImage
+                        ? "dark:text-darkmaintext"
+                        : "bg-blue-500 text-white "
                     }`}
                     type="button"
                     onClick={handleSubmit}

@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import Image from "next/image";
 import userImage from "@/public/images/user.svg";
 import { useSelector } from "react-redux";
@@ -21,7 +22,7 @@ const Accepted = ({ user }) => {
         user?.acceptedConnections.map((item, i) => (
           <div
             key={i}
-            className="text-center  flex flex-col sm:flex-row  items-center justify-between px-1 hover:scale-105 rounded-md overflow-hidden  p-3  my-3 w-full mx-2 duration-300  hover:bg-slate-300"
+            className="text-center dark:border-darkborder flex flex-col sm:flex-row  items-center justify-between px-1 hover:scale-105 rounded-md overflow-hidden  p-3  my-3 w-full mx-2 duration-300 dark:hover:bg-darkbg hover:bg-slate-300"
           >
             <div className="flex items-center flex-col sm:flex-row   rounded-full ">
               {item?.receiverProfileImage ? (
@@ -45,13 +46,13 @@ const Accepted = ({ user }) => {
                   className="rounded-full h-24 w-24 mx-auto"
                 />
               )}
-              <div className="font-semibold flex flex-col justify-center ml-3  text-base leading-normal text-black  opacity-90">
+              <div className="font-semibold flex dark:text-darkmaintext flex-col justify-center ml-3  text-base leading-normal text-black  opacity-90">
                 {item?.receiverId === user?._id ? (
                   <span>{item?.requesterFirstName} </span>
                 ) : (
                   <span>{item?.receiverFirstName} </span>
                 )}
-                <div className="font-normal flex justify-center  text-md leading-snug my-1">
+                <div className="font-normal dark:text-darksecondtext flex justify-center  text-md leading-snug my-1">
                   Front-End
                 </div>
               </div>
@@ -66,7 +67,7 @@ const Accepted = ({ user }) => {
           </div>
         ))
       ) : (
-        <span>No connections</span>
+        <span className="dark:text-darkmaintext">No connections</span>
       )}
     </>
   );

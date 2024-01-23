@@ -1,5 +1,89 @@
 import mongoose, { models } from "mongoose";
 
+const jobSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  providerId: {
+    type: String,
+    required: true,
+  },
+  providerTitle: {
+    type: String,
+    required: true,
+  },
+  providerName: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: String,
+    required: true,
+  },
+  place: {
+    type: String,
+    required: true,
+  },
+  providerImage: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+});
+
+const commentSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+  },
+  userName: {
+    type: String,
+  },
+  userImage: {
+    type: String,
+  },
+  content: {
+    type: String,
+  },
+  postId: {
+    type: String,
+  },
+});
+const likeSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+  },
+  userName: {
+    type: String,
+  },
+  userImage: {
+    type: String,
+  },
+});
+
+const sharedPostSchema = new mongoose.Schema({
+  originalUserId: {
+    type: String,
+  },
+  originalUserFirstName: {
+    type: String,
+  },
+  originalUserLastName: {
+    type: String,
+  },
+  originalUserImage: {
+    type: String,
+  },
+  originalDate: {
+    type: String,
+  },
+  originalUserTitle: {
+    type: String,
+  },
+});
 const postSchema = new mongoose.Schema({
   autherId: {
     type: Object,
@@ -27,6 +111,9 @@ const postSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  likes: [likeSchema],
+  comments: [commentSchema],
+  repost: sharedPostSchema,
 });
 const educationSchema = new mongoose.Schema({
   institution: {
@@ -142,7 +229,15 @@ const acceptedConnectionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  receiverStatus: {
+    type: String,
+    required: true,
+  },
   requesterId: {
+    type: String,
+    required: true,
+  },
+  requesterStatus: {
     type: String,
     required: true,
   },
@@ -230,8 +325,30 @@ const userSchema = new mongoose.Schema({
   chat: [messageSchema],
   acceptedConnections: [acceptedConnectionSchema],
   pendingConnections: [pendingConnectionSchema],
+  status: {
+    type: String,
+    required: true,
+  },
+  comments: [commentSchema],
+  mode: {
+    type: String,
+  },
+  country: {
+    type: String,
+  },
+  emailToContact: {
+    type: String,
+  },
+  website: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
 });
 
 const User = models.User || mongoose.model("User", userSchema);
 const Post = models.Post || mongoose.model("Post", postSchema);
-export { User, Post };
+const Job = models.Job || mongoose.model("Job", jobSchema);
+
+export { User, Post, Job };

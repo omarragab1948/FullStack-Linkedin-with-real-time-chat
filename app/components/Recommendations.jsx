@@ -1,25 +1,12 @@
-import React, { useEffect, useState } from "react";
+"use client";
 import Image from "next/image";
-import { connect } from "@/app/services/apiHandler";
-import Link from "next/link";
-import userImage from "@/public/images/user.svg";
+
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../rtk/authSlice";
-import io from "socket.io-client";
 
 const Recommendations = ({ user, users, handleConnect }) => {
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.auth?.status);
-  const loginUser = async () => {
-    try {
-      await dispatch(login()).then((data) => {
-        typeof window !== "undefined" &&
-          localStorage.setItem("user", JSON.stringify(data.payload));
-      });
-    } catch (error) {
-      console.error("Error logging in:", error);
-    }
-  };
+
   const sendConnection = (item) => {
     handleConnect(item);
   };
@@ -34,22 +21,12 @@ const Recommendations = ({ user, users, handleConnect }) => {
           conn?.receiverId === item?._id || conn?.requesterId === item?._id
       )
   );
-  // useEffect(() => {
-  //   loginUser();
-  // }, [reload]);
 
-  if (status === "loading") {
-    return (
-      <div
-        className={`border-4 mt-3 border-solid mr-4  border-gray-400 border-t-blue-500  rounded-full w-8 h-8 animate-spin`}
-      ></div>
-    );
-  }
   return (
     <>
       {filteredUsers?.map((item, i) => (
         <div
-          className="text-center hover:scale-105 rounded-t-xl overflow-hidden rounded pb-3 w-4/5 sm:w-3/5 my-3 lg:w-1/4 mx-2 duration-300 border border-solid border-slate-300 hover:bg-slate-300"
+          className="text-center dark:text-darksecondtext hover:scale-105 rounded-t-xl overflow-hidden rounded pb-3 w-4/5 sm:w-3/5 my-3 lg:w-1/4 mx-2 duration-300 border border-solid dark:border-darkborder border-slate-300 dark:hover:bg-darkbg hover:bg-slate-300"
           key={i}
         >
           <div className="w-full">
@@ -75,7 +52,7 @@ const Recommendations = ({ user, users, handleConnect }) => {
                 height={1500}
               />
             </div>
-            <div className="font-semibold relative bottom-6 text-base leading-normal text-black opacity-90">
+            <div className="font-semibold relative bottom-6 text-base leading-normal dark:text-darkmaintext dark:hover:text-black text-black opacity-90">
               <span>
                 {item?.firstName} {item?.lastName}
               </span>
@@ -93,7 +70,9 @@ const Recommendations = ({ user, users, handleConnect }) => {
         </div>
       ))}
       {filteredUsers?.length === 0 && (
-        <span>No recommendatins connections</span>
+        <span className="dark:text-darkmaintext">
+          No recommendatins connections
+        </span>
       )}
     </>
   );

@@ -46,7 +46,6 @@ const EducationForm = ({ show, update, setShow, id }) => {
 
     try {
       const res = await addEducation(formData);
-      console.log(res.data);
       if (res.status === 200) {
         dispatch(login(res.data));
         typeof window !== "undefined" &&
@@ -69,7 +68,6 @@ const EducationForm = ({ show, update, setShow, id }) => {
 
     try {
       const res = await UpdateEducation(formData, id);
-      console.log(res.data);
       if (res.status === 200) {
         dispatch(login(res.data));
         typeof window !== "undefined" &&
@@ -83,10 +81,10 @@ const EducationForm = ({ show, update, setShow, id }) => {
   };
   return (
     <div className="container mx-auto mt-2">
-      <form className="max-w-md mx-auto bg-white p-2 ">
+      <form className="max-w-md mx-auto bg-white dark:bg-darkbg p-2 ">
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block dark:text-darksecondtext text-gray-700 text-sm font-bold mb-2"
             htmlFor="institution"
           >
             Institution
@@ -97,14 +95,14 @@ const EducationForm = ({ show, update, setShow, id }) => {
             name="institution"
             value={education.institution}
             onChange={handleChange}
-            className="w-full border rounded py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
+            className="w-full border rounded dark:text-darkmaintext dark:bg-darkbg py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
             required
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-700 dark:text-darksecondtext text-sm font-bold mb-2"
             htmlFor="department"
           >
             Department
@@ -115,14 +113,14 @@ const EducationForm = ({ show, update, setShow, id }) => {
             name="department"
             value={education.department}
             onChange={handleChange}
-            className="w-full border rounded py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
+            className="w-full border rounded dark:text-darkmaintext dark:bg-darkbg py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
             required
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-700 dark:text-darksecondtext text-sm font-bold mb-2"
             htmlFor="startDate"
           >
             Start Date
@@ -133,14 +131,14 @@ const EducationForm = ({ show, update, setShow, id }) => {
             name="startDate"
             value={education.startDate}
             onChange={handleChange}
-            className="w-full border rounded py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
+            className="w-full border rounded dark:text-darkmaintext dark:bg-darkbg py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
             required
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-700 dark:text-darksecondtext text-sm font-bold mb-2"
             htmlFor="endDate"
           >
             End Date
@@ -151,14 +149,14 @@ const EducationForm = ({ show, update, setShow, id }) => {
             name="endDate"
             value={education.endDate}
             onChange={handleChange}
-            className="w-full border rounded py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
+            className="w-full border rounded dark:text-darkmaintext dark:bg-darkbg py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
             required
           />
         </div>
 
         <div className="mb-4 ">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-700 dark:text-darksecondtext text-sm font-bold mb-2"
             htmlFor="grade"
           >
             Grade
@@ -169,7 +167,7 @@ const EducationForm = ({ show, update, setShow, id }) => {
             name="grade"
             value={education.grade}
             onChange={handleChange}
-            className="w-full border rounded py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
+            className="w-full border rounded dark:text-darkmaintext dark:bg-darkbg py-2 px-3 border-slate-300 border-solid focus:border-blue-600 focus:outline-none"
             required
           />
         </div>
@@ -196,7 +194,7 @@ const EducationForm = ({ show, update, setShow, id }) => {
               education.endDate === "" ||
               education.grade === "" ||
               education.department === ""
-                ? "text-black"
+                ? "text-black dark:text-darksecondtext"
                 : "text-white bg-blue-600  rounded-full "
             }`}
           >
@@ -218,7 +216,7 @@ const EducationForm = ({ show, update, setShow, id }) => {
               education.endDate === "" ||
               education.grade === "" ||
               education.department === ""
-                ? "text-black"
+                ? "text-black dark:text-darksecondtext"
                 : "text-white bg-blue-600  rounded-full "
             }`}
           >

@@ -47,10 +47,6 @@ export const POST = async (request) => {
         if (conn1.channel === conn2.channel) {
           commonChannel = conn1.channel;
 
-          // Add a new message to the chat array
-          console.log("conn1", conn1);
-          console.log("conn2", conn2);
-
           conn1.chat.push({
             senderId: existUser._id,
             receiverId: userToConnect._id,

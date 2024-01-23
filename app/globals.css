@@ -2,20 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add these styles to your CSS or SCSS file */
 a::after {
   content: "";
   display: block;
-  width: 0; /* Initially, set width to 0 */
+  width: 0;
   height: 2px;
-  background-color: black;
+  background-color: white;
+
   position: absolute;
-  bottom: 0;
-  left: 50%; /* Center the animation */
-  transform: translateX(-50%); /* Center the animation */
-  transition: width 0.3s ease; /* Add a transition for smooth movement */
+  bottom: -17px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
 }
 
 .active::after {
-  width: 100%; /* Set width to 100% for the active link */
+  width: 100%;
+}
+@media (max-width: 639px) {
+  a::after {
+    top: -9px;
+    bottom: auto;
+  }
 }

@@ -4,7 +4,7 @@ import logo from "/public/images/login-logo.svg";
 import "react-toastify/dist/ReactToastify.css";
 
 import Link from "next/link";
-import { signIn, signUp } from "../services/apiHandler";
+import { signIn } from "../services/apiHandler";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -27,24 +27,21 @@ const SignIn = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^.{8,}$/;
   const dispatch = useDispatch();
+
   const handleInput = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
   };
   const handleSignIn = async (e) => {
-    setSpinner(true);
-
     e.preventDefault();
     setEr({
       email: "",
       password: "",
     });
-    // Validate email
     if (!emailRegex.test(userInfo.email)) {
       setEr((prev) => ({ ...prev, email: true }));
       return;
     }
 
-    // Validate password
     if (!passwordRegex.test(userInfo.password)) {
       setEr((prev) => ({
         ...prev,
@@ -53,19 +50,21 @@ const SignIn = () => {
       return;
     }
     try {
+      setSpinner(true);
+
       const res = await signIn(userInfo);
       if (res.status === 200) {
-        console.log(res.data);
+        router.push("/home");
+
         dispatch(login(res.data));
+
         setSpinner(false);
 
         localStorage.setItem("user", JSON.stringify(res.data));
-        router.push("/home");
       } else {
         toast.error(res.error);
         setSpinner(false);
       }
-      console.log(res);
     } catch (e) {}
   };
 
@@ -74,11 +73,14 @@ const SignIn = () => {
 
     signInWithPopup(auth, googleProvider)
       .then(async (result) => {
+        setSpinner(true);
+
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
         const userData = {
-          firstName: user.displayName,
+          firstName: user.displayName.split(" ")[0],
+          lastName: user.displayName.split(" ")[1],
           email: user.email,
           profileImage: user.photoURL,
           google: true,
