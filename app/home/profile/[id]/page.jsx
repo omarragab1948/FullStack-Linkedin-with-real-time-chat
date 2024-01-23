@@ -3,15 +3,15 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import userImage from "../../../../public/images/user.svg";
 import Link from "next/link";
-import PostModel from "@/app/components/PostModel";
-import UpdateImagePopup from "@/app/components/UpdateImagesPopup";
+import PostModel from "../../../components/PostModel";
+import UpdateImagePopup from "../../../components/UpdateImagesPopup";
 import { FaPen } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import UpdateProfilePopup from "@/app/components/UpdateProfilePopup";
-import { getAllUsers, getUserProfile } from "@/app/services/apiHandler";
+import UpdateProfilePopup from "../../../components/UpdateProfilePopup";
+import { getAllUsers, getUserProfile } from "../../../services/apiHandler";
 import { usePathname } from "next/navigation";
 import { FaArrowRight } from "react-icons/fa";
-import UpdateInfoPopup from "@/app/components/UpdateInfoPopup";
+import UpdateInfoPopup from "../../../components/UpdateInfoPopup";
 import ContactPopup from "../../../components/ContactPopup";
 
 const page = () => {
