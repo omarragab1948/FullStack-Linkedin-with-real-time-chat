@@ -128,28 +128,52 @@ const page = () => {
           </div>
 
           {/* Profile Image */}
-          <button
-            onClick={() => handleUpdateImage("Profile photo")}
-            className="absolute bottom-28 left-10 rounded-full overflow-hidden"
-          >
-            {user?.profileImage !== "" && user?.profileImage !== "undefined" ? (
-              <Image
-                src={user?.profileImage}
-                alt="user"
-                className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full"
-                width={2500}
-                height={2500}
-              />
-            ) : (
-              <Image
-                src={userImage}
-                alt="user"
-                className="w-24 h-24 object-cover rounded-full"
-                width={1500}
-                height={1500}
-              />
-            )}
-          </button>
+          {sameUser ? (
+            <button
+              onClick={() => handleUpdateImage("Profile photo")}
+              className="absolute bottom-28 left-10 rounded-full overflow-hidden"
+            >
+              {user?.profileImage !== "" &&
+              user?.profileImage !== "undefined" ? (
+                <Image
+                  src={user?.profileImage}
+                  alt="user"
+                  className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full"
+                  width={2500}
+                  height={2500}
+                />
+              ) : (
+                <Image
+                  src={userImage}
+                  alt="user"
+                  className="w-24 h-24 object-cover rounded-full"
+                  width={1500}
+                  height={1500}
+                />
+              )}
+            </button>
+          ) : (
+            <div className="absolute bottom-28 left-10 rounded-full overflow-hidden">
+              {user?.profileImage !== "" &&
+              user?.profileImage !== "undefined" ? (
+                <Image
+                  src={user?.profileImage}
+                  alt="user"
+                  className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full"
+                  width={2500}
+                  height={2500}
+                />
+              ) : (
+                <Image
+                  src={userImage}
+                  alt="user"
+                  className="w-24 h-24 object-cover rounded-full"
+                  width={1500}
+                  height={1500}
+                />
+              )}
+            </div>
+          )}
 
           {/* Edit Background Photo Button */}
           {sameUser && (
@@ -191,12 +215,14 @@ const page = () => {
               </div>
             </div>
 
-            <button
-              onClick={() => setShowInfoPopup(true)}
-              className=" bg-white rounded-full p-2 mr-10"
-            >
-              <FaPen />
-            </button>
+            {sameUser && (
+              <button
+                onClick={() => setShowInfoPopup(true)}
+                className=" bg-white rounded-full p-2 mr-10"
+              >
+                <FaPen />
+              </button>
+            )}
           </div>
 
           {/* Update Image Popup */}
@@ -439,6 +465,8 @@ const page = () => {
       <ContactPopup
         show={showContactPopup}
         setShowContactPopup={setShowContactPopup}
+        sameUser={sameUser}
+        visitUser={visitUser}
       />
       <UpdateInfoPopup
         show={showInfoPopup}

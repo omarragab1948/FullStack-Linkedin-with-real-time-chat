@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { FaPen } from "react-icons/fa";
 import UpdateContactPopup from "./UpdateContactPopup";
 
-const ContactPopup = ({ setShowContactPopup, show }) => {
+const ContactPopup = ({ setShowContactPopup, show, sameUser, visitUser }) => {
   const user = useSelector((state) => state.auth.user?.user);
   const [showUpdateContact, setShowUpdateContact] = useState(false);
   const handleClose = () => {
@@ -25,12 +25,14 @@ const ContactPopup = ({ setShowContactPopup, show }) => {
               >
                 <IoCloseSharp />
               </button>
-              <button
-                onClick={() => setShowUpdateContact(true)}
-                className=" bg-white rounded-full p-2  text-2xl absolute top-16 right-2"
-              >
-                <FaPen />
-              </button>
+              {sameUser && (
+                <button
+                  onClick={() => setShowUpdateContact(true)}
+                  className=" bg-white rounded-full p-2  text-2xl absolute top-16 right-2"
+                >
+                  <FaPen />
+                </button>
+              )}
             </div>
 
             {/* Display user data as divs */}
@@ -40,11 +42,11 @@ const ContactPopup = ({ setShowContactPopup, show }) => {
                   Website
                 </span>
                 <a
-                  href={`${user?.website}`}
+                  href={`${visitUser?.website}`}
                   target="_blank"
                   className="text-md text-blue-600"
                 >
-                  {user?.website || ""}
+                  {visitUser?.website || ""}
                 </a>
               </div>
 
@@ -53,7 +55,7 @@ const ContactPopup = ({ setShowContactPopup, show }) => {
                   Phone
                 </span>
                 <div className="text-md dark:text-darkmaintext">
-                  {user?.phone || ""}
+                  {visitUser?.phone || ""}
                 </div>
               </div>
 
@@ -62,7 +64,7 @@ const ContactPopup = ({ setShowContactPopup, show }) => {
                   Email
                 </span>
                 <div className="text-md dark:text-darkmaintext">
-                  {user?.emailToContact || ""}
+                  {visitUser?.emailToContact || ""}
                 </div>
               </div>
             </div>

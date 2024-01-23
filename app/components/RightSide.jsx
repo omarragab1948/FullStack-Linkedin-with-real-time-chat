@@ -71,7 +71,7 @@ const RightSide = () => {
       )
   );
   return (
-    <div className="lg:flex w-1/4 hidden flex-col dark:bg-darkbg  sticky top-24 h-96 rounded-lg px-3 py-4 border border-slate-300 dark:border-darkborder border-solid ">
+    <div className="lg:flex w-1/4 hidden flex-col dark:bg-darkbg  sticky top-24 overflow-auto h-96 rounded-lg px-3 py-4 border border-slate-300 dark:border-darkborder border-solid ">
       {filteredUsers?.map((item, i) => (
         <Link
           href={`/home/profile/${item?._id}`}
