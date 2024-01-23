@@ -38,7 +38,9 @@ const LeftSide = () => {
             </span>
           </div>
           <div className="font-normal dark:text-darksecondtext relative bottom-6 text-md leading-snug mt-1">
-            Front-End
+            {userr?.title === "undefined" || userr?.title === ""
+              ? ""
+              : userr?.title}
           </div>
         </Link>
       </div>
